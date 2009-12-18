@@ -1,0 +1,59 @@
+/*
+ * $Id$
+ *
+ * Copyright (c) 2009 T-Systems International GmbH.
+ * All rights reserved.
+ * This software is the confidential and proprietary information
+ * of T-Systems International GmbH.
+ *
+ */
+package com.tsi.netbeans.modules.languages.velocity.lexer;
+
+import org.netbeans.api.lexer.Language;
+import org.netbeans.api.lexer.TokenId;
+
+/**
+ *
+ * @author <a href="mailto:werner.jaeger@t-systems.com">Werner Jaeger</a>
+ */
+public class VTLTokenId implements TokenId
+{
+   private static final Language<VTLTokenId> LANGUAGE = new VTLLanguageHierarchy().language();
+
+   private final String m_strName;
+   private final String m_strPrimaryCategory;
+   private final int    m_iId;
+
+   /**
+    * Creates new {@code VTLTokenId}.
+    */
+   public VTLTokenId(final String strName, final String strPrimaryCategory, final int iId)
+   {
+      m_strName            = strName;
+      m_strPrimaryCategory = strPrimaryCategory;
+      m_iId                = iId;
+   }
+
+    public static final Language<VTLTokenId> getLanguage()
+    {
+        return(LANGUAGE);
+    }
+
+   @Override
+   public String name()
+   {
+      return(m_strName);
+   }
+
+   @Override
+   public String primaryCategory()
+   {
+      return(m_strPrimaryCategory);
+   }
+
+   @Override
+   public int ordinal()
+   {
+      return(m_iId);
+   }
+}

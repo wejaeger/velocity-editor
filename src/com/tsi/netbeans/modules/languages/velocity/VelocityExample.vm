@@ -1,0 +1,19 @@
+## Velocity Example Template.
+#macro (generateDesc $docu)
+#end
+#
+# Attention: Generated code! Do not modify by hand!
+#
+#set($musts = [])
+#if ($velocityCount % 4 == 0)
+#end
+#foreach ($import in $session.imports(false, false))
+import ${import};
+#end
+#foreach ($attribute in $transform.getLdapSchemaAttributes())
+#set ($oid = $transform.findTagValue($attribute, "oid"))
+attributeType ( $oid NAME '$attribute.name'
+#generateDesc($transform.javaDocGenerator().getDocumentation($attribute))
+
+#end
+
