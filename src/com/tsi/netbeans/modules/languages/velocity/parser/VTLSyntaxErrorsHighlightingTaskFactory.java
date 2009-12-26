@@ -19,18 +19,18 @@ import org.netbeans.modules.parsing.spi.TaskFactory;
  *
  * @author <a href="mailto:werner.jaeger@t-systems.com">Werner Jaeger</a>
  */
-public class SyntaxErrorsHighlightingTaskFactory extends TaskFactory
+public class VTLSyntaxErrorsHighlightingTaskFactory extends TaskFactory
 {
    /**
-    * Creates new {@code SyntaxErrorsHighlightingTaskFactory}.
+    * Creates new {@code VTLSyntaxErrorsHighlightingTaskFactory}.
     */
-   public SyntaxErrorsHighlightingTaskFactory()
+   public VTLSyntaxErrorsHighlightingTaskFactory()
    {
    }
 
    @Override
    public Collection<? extends SchedulerTask> create(final Snapshot snapshot)
    {
-      return(Collections.singleton(new SyntaxErrorsHighlightingTask()));
+      return(Collections.singleton(new VTLSyntaxErrorsHighlightingTask()));
    }
 }

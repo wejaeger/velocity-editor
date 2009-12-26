@@ -27,27 +27,28 @@ public interface VelocityParserTreeConstants
   public int JJTTEXT = 19;
   public int JJTFOREACHSTATEMENT = 20;
   public int JJTMACROSTATEMENT = 21;
-  public int JJTIFSTATEMENT = 22;
-  public int JJTELSESTATEMENT = 23;
-  public int JJTELSEIFSTATEMENT = 24;
-  public int JJTSETDIRECTIVE = 25;
-  public int JJTSTOP = 26;
-  public int JJTEXPRESSION = 27;
-  public int JJTASSIGNMENT = 28;
-  public int JJTORNODE = 29;
-  public int JJTANDNODE = 30;
-  public int JJTEQNODE = 31;
-  public int JJTNENODE = 32;
-  public int JJTLTNODE = 33;
-  public int JJTGTNODE = 34;
-  public int JJTLENODE = 35;
-  public int JJTGENODE = 36;
-  public int JJTADDNODE = 37;
-  public int JJTSUBTRACTNODE = 38;
-  public int JJTMULNODE = 39;
-  public int JJTDIVNODE = 40;
-  public int JJTMODNODE = 41;
-  public int JJTNOTNODE = 42;
+  public int JJTINCLUDESTATEMENT = 22;
+  public int JJTIFSTATEMENT = 23;
+  public int JJTELSESTATEMENT = 24;
+  public int JJTELSEIFSTATEMENT = 25;
+  public int JJTSETDIRECTIVE = 26;
+  public int JJTSTOP = 27;
+  public int JJTEXPRESSION = 28;
+  public int JJTASSIGNMENT = 29;
+  public int JJTORNODE = 30;
+  public int JJTANDNODE = 31;
+  public int JJTEQNODE = 32;
+  public int JJTNENODE = 33;
+  public int JJTLTNODE = 34;
+  public int JJTGTNODE = 35;
+  public int JJTLENODE = 36;
+  public int JJTGENODE = 37;
+  public int JJTADDNODE = 38;
+  public int JJTSUBTRACTNODE = 39;
+  public int JJTMULNODE = 40;
+  public int JJTDIVNODE = 41;
+  public int JJTMODNODE = 42;
+  public int JJTNOTNODE = 43;
 
 
   public String[] jjtNodeName = {
@@ -73,6 +74,7 @@ public interface VelocityParserTreeConstants
     "Text",
     "ForEachStatement",
     "MacroStatement",
+    "IncludeStatement",
     "IfStatement",
     "ElseStatement",
     "ElseIfStatement",
@@ -96,4 +98,4 @@ public interface VelocityParserTreeConstants
     "NotNode",
   };
 }
-/* JavaCC - OriginalChecksum=8755728c7a0c480f8d5b2d981eb88116 (do not edit this line) */
+/* JavaCC - OriginalChecksum=e520fd6ce2f03f67b751231016d33393 (do not edit this line) */
