@@ -31,12 +31,12 @@ import org.openide.util.Exceptions;
  *
  * @author <a href="mailto:werner.jaeger@t-systems.com">Werner Jaeger</a>
  */
-public class SyntaxErrorsHighlightingTask extends ParserResultTask
+public class VTLSyntaxErrorsHighlightingTask extends ParserResultTask
 {
    /**
-    * Creates new {@code SyntaxErrorsHighlightingTask}.
+    * Creates new {@code VTLSyntaxErrorsHighlightingTask}.
     */
-   public SyntaxErrorsHighlightingTask()
+   public VTLSyntaxErrorsHighlightingTask()
    {
    }
 
@@ -49,6 +49,11 @@ public class SyntaxErrorsHighlightingTask extends ParserResultTask
          final List<ParseException>   syntaxErrors = vtlResult.getParser().getSyntaxErrors();
          final Document               document     = result.getSnapshot().getSource().getDocument(false);
          final List<ErrorDescription> errors       = new ArrayList<ErrorDescription>();
+
+         VTLUpToDateStatusProvider sp = VTLUpToDateStatusProvider.forDocument(document);
+
+         if (sp != null)
+            sp.setProcessingStatus();
 
          for (final ParseException syntaxError : syntaxErrors)
          {
@@ -68,6 +73,9 @@ public class SyntaxErrorsHighlightingTask extends ParserResultTask
             errors.add(errorDescription);
          }
          HintsController.setErrors(document, "velocity", errors);
+
+         if (sp != null)
+            sp.setOkStatus();
       }
       catch (BadLocationException ex1)
       {

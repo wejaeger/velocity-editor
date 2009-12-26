@@ -107,47 +107,51 @@ public interface VelocityParserConstants {
   /** RegularExpression Id. */
   int MACRO_DIRECTIVE = 51;
   /** RegularExpression Id. */
-  int IF_DIRECTIVE = 52;
+  int INCLUDE_DIRECTIVE = 52;
   /** RegularExpression Id. */
-  int ELSEIF_DIRECTIVE = 53;
+  int IF_DIRECTIVE = 53;
   /** RegularExpression Id. */
-  int ELSE_DIRECTIVE = 54;
+  int ELSEIF_DIRECTIVE = 54;
   /** RegularExpression Id. */
-  int STOP_DIRECTIVE = 55;
+  int ELSE_DIRECTIVE = 55;
   /** RegularExpression Id. */
-  int DIGIT = 56;
+  int STOP_DIRECTIVE = 56;
   /** RegularExpression Id. */
-  int INTEGER_LITERAL = 57;
+  int MACROCALL_DIRECTIVE = 57;
   /** RegularExpression Id. */
-  int FLOATING_POINT_LITERAL = 58;
+  int DIGIT = 58;
   /** RegularExpression Id. */
-  int EXPONENT = 59;
+  int INTEGER_LITERAL = 59;
   /** RegularExpression Id. */
-  int LETTER = 60;
+  int FLOATING_POINT_LITERAL = 60;
   /** RegularExpression Id. */
-  int DIRECTIVE_CHAR = 61;
+  int EXPONENT = 61;
   /** RegularExpression Id. */
-  int WORD = 62;
+  int LETTER = 62;
   /** RegularExpression Id. */
-  int BRACKETED_WORD = 63;
+  int DIRECTIVE_CHAR = 63;
   /** RegularExpression Id. */
-  int ALPHA_CHAR = 64;
+  int WORD = 64;
   /** RegularExpression Id. */
-  int ALPHANUM_CHAR = 65;
+  int BRACKETED_WORD = 65;
   /** RegularExpression Id. */
-  int IDENTIFIER_CHAR = 66;
+  int ALPHA_CHAR = 66;
   /** RegularExpression Id. */
-  int IDENTIFIER = 67;
+  int ALPHANUM_CHAR = 67;
   /** RegularExpression Id. */
-  int DOT = 68;
+  int IDENTIFIER_CHAR = 68;
   /** RegularExpression Id. */
-  int LCURLY = 69;
+  int IDENTIFIER = 69;
   /** RegularExpression Id. */
-  int RCURLY = 70;
+  int DOT = 70;
   /** RegularExpression Id. */
-  int REFERENCE_TERMINATOR = 71;
+  int LCURLY = 71;
   /** RegularExpression Id. */
-  int DIRECTIVE_TERMINATOR = 72;
+  int RCURLY = 72;
+  /** RegularExpression Id. */
+  int REFERENCE_TERMINATOR = 73;
+  /** RegularExpression Id. */
+  int DIRECTIVE_TERMINATOR = 74;
 
   /** Lexical state. */
   int DIRECTIVE = 0;
@@ -222,10 +226,12 @@ public interface VelocityParserConstants {
     "<END>",
     "<FOREACH_DIRECTIVE>",
     "<MACRO_DIRECTIVE>",
+    "<INCLUDE_DIRECTIVE>",
     "<IF_DIRECTIVE>",
     "<ELSEIF_DIRECTIVE>",
     "<ELSE_DIRECTIVE>",
     "<STOP_DIRECTIVE>",
+    "<MACROCALL_DIRECTIVE>",
     "<DIGIT>",
     "<INTEGER_LITERAL>",
     "<FLOATING_POINT_LITERAL>",

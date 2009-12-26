@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!-- $Id$ -->
 <!-- <a href="mailto:werner.jaeger@t-systems.com">Werner Jaeger</a> on December 14, 2009, 05:38 AM -->
-
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
    <folder name="Editors">
@@ -18,13 +16,27 @@
                   </folder>
                </folder>
             </folder>
+            <folder name="UpToDateStatusProvider">
+               <file name="com-tsi-netbeans-modules-languages-velocity-parser-VTLUpToDateStatusProviderFactory.instance"/>
+            </folder>
+            <folder name="SideBar">
+               <file name="com-tsi-netbeans-modules-languages-velocity-editor-fold-VTLCodeFoldingSideBarFactory.instance">
+                  <attr name="position" intvalue="1500"/>
+               </file>
+            </folder>
+            <folder name="FoldManager">
+               <file name="com-tsi-netbeans-modules-languages-velocity-editor-fold-VTLFoldManagerFactory.instance"/>
+            </folder>
+            <file name="EditorKit.instance">
+               <attr name="instanceClass" stringvalue="com.tsi.netbeans.modules.languages.velocity.editor.VTLEditorKit"/>
+            </file>
             <file name="language.instance">
                <attr name="instanceCreate" methodvalue="com.tsi.netbeans.modules.languages.velocity.lexer.VTLTokenId.getLanguage"/>
                <attr name="instanceOf" stringvalue="org.netbeans.api.lexer.Language"/>
                <attr name="icon" stringvalue="com/tsi/netbeans/modules/languages/velocity/VelocityFiles16.png"/>
             </file>
             <file name="com.tsi.netbeans.modules.languages.velocity.parser.VTLParserFactory.instance"/>
-            <file name="com.tsi.netbeans.modules.languages.velocity.parser.SyntaxErrorsHighlightingTaskFactory.instance"/>
+            <file name="com.tsi.netbeans.modules.languages.velocity.parser.VTLSyntaxErrorsHighlightingTaskFactory.instance"/>
          </folder>
       </folder>
    </folder>
@@ -104,6 +116,7 @@
       <folder name="MIMEResolver">
          <file name="VTLResolver.xml" url="VTLResolver.xml">
             <attr name="displayName" bundlevalue="com.tsi.netbeans.modules.languages.velocity.Bundle#Services/MIMEResolver/VTLResolver.xml"/>
+            <attr name="position" intvalue="1309"/>
          </file>
       </folder>
    </folder>

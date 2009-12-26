@@ -7,10 +7,6 @@
  * of T-Systems International GmbH.
  *
  */
-/*
- *  NOTE : please see documentation at bottom of this file. (It was placed there its tiring
- *    to always have to page past it... :)
- */
 options
 {
     /** The default package for this parser kit */
@@ -18,6 +14,9 @@ options
 
     /** A source file will be generated for each non-terminal */
     MULTI=true;
+
+    /** to remember the first an last token of a node */
+    NODE_SCOPE_HOOK = true;
 
     /**
      * Each node will have access to the parser, I did this so
@@ -44,7 +43,7 @@ options
      * nodes themselves. If processing changes then
      * the nothing has to change in the node code.
      */
-    VISITOR=false;
+    VISITOR=true;
 
     /**
      * Declare that we are accepting unicode input and
@@ -86,6 +85,11 @@ import java.util.TreeSet;
 public class VelocityParser
 {
     /**
+     *  This set contains a list of all declared macro names.
+     */
+    private final static Set<String> m_MacroNames = new TreeSet<String>();
+
+    /**
      *  Name of current template we are parsing.  Passed to us in parse()
      */
     public String m_strCurrentTemplateName = "";
@@ -94,11 +98,6 @@ public class VelocityParser
      *  This Hashtable contains a list of all of the dynamic m_Directives.
      */
     private Hashtable m_Directives = new Hashtable(0);
-
-    /**
-     *  This set contains a list of all declared maco names.
-     */
-    private final Set<String> m_MacroNames = new TreeSet<String>();
 
     private List<ParseException> m_SyntaxErrors;
 
@@ -117,7 +116,6 @@ public class VelocityParser
         /*
          * need to call the CTOR first thing.
          */
-
         this(new SimpleCharStream(new ByteArrayInputStream("\n".getBytes()), 1, 1));
 
         /*
@@ -126,6 +124,18 @@ public class VelocityParser
         m_VelocityCharStream = new SimpleCharStream(new ByteArrayInputStream("\n".getBytes()), 1, 1);
 
         m_SyntaxErrors = new ArrayList<ParseException>();
+    }
+
+    /** store the node's first token */
+    private void jjtreeOpenNodeScope(final Node n)
+    {
+        ((SimpleNode)n).setFirstToken(getToken(1));
+    }
+
+    /** store the node's last token */
+    private void jjtreeCloseNodeScope(final Node n)
+    {
+        ((SimpleNode)n).setLastToken(getToken(0));
     }
 
     /**
@@ -140,14 +150,19 @@ public class VelocityParser
 
     private void recover(final ParseException pe, final int iRecoveryPoint)
     {
-      m_SyntaxErrors.add(pe);
-
       Token t;
 
       do
       {
          t = getNextToken();
       } while (t.kind != iRecoveryPoint && t.kind != EOF);
+
+      recover(pe);
+    }
+
+    private void recover(final ParseException pe)
+    {
+      m_SyntaxErrors.add(pe);
     }
 
     /**
@@ -165,6 +180,7 @@ public class VelocityParser
 
         m_strCurrentTemplateName = strTemplateName;
         m_SyntaxErrors.clear();
+        m_MacroNames.clear();
 
         try
         {
@@ -188,12 +204,11 @@ public class VelocityParser
         }
         catch (ParseException pe)
         {
-           recover(pe, RPAREN);
+           recover(pe);
         }
         catch (TokenMgrError tme)
         {
-           token.next = token;
-           recover(new ParseException(token, new int[0][0], new String[] {"Lexical error: " + tme.toString()}), TEXT);
+           recover(new ParseException(token, new int[0][0], new String[] {"Lexical error: " + tme.toString()}));
         }
         catch (Exception e)
         {
@@ -209,15 +224,15 @@ public class VelocityParser
     /**
      *  This method add a declared macro name.
      */
-    public void addMacroName(final String strMacroName)
+    public static void addMacroName(final String strMacroName)
     {
         m_MacroNames.add(strMacroName);
     }
 
     /**
-     *  This method finds out ff the macro is declared
+     *  This method finds out if the macro is declared
      */
-    public boolean isVelocityMacro(final String strMacroName)
+    public static boolean isMacro(final String strMacroName)
     {
         return(m_MacroNames.contains(strMacroName));
     }
@@ -263,7 +278,7 @@ public class VelocityParser
         {
            fRecognizedDirective = true;
         }
-        else if (isVelocityMacro(strDirTag))
+        else if (VelocityParser.isMacro(strDirTag))
         {
             fRecognizedDirective = true;
         }
@@ -271,7 +286,7 @@ public class VelocityParser
         {
             /* order for speed? */
 
-            if (strDirTag.equals("foreach") || strDirTag.equals("macro") || strDirTag.equals("if") || strDirTag.equals("end") || strDirTag.equals("set") || strDirTag.equals("else") || strDirTag.equals("elseif") || strDirTag.equals("stop"))
+            if (strDirTag.equals("include") || strDirTag.equals("foreach") || strDirTag.equals("macro") || strDirTag.equals("if") || strDirTag.equals("end") || strDirTag.equals("set") || strDirTag.equals("else") || strDirTag.equals("elseif") || strDirTag.equals("stop"))
             {
                 fRecognizedDirective = true;
             }
@@ -281,7 +296,6 @@ public class VelocityParser
          *  if so, make the proper prefix string (let the escapes do their thing..)
          *  otherwise, just return what it is..
          */
-
         if (fRecognizedDirective)
             return(strImage.substring(0, iLast/2) + strDirective);
         else
@@ -366,27 +380,27 @@ TOKEN_MGR_DECLS:
 
         try
         {
-            h = (Hashtable) stateStack.pop();
+            h = (Hashtable)stateStack.pop();
         }
-        catch( EmptyStackException e)
+        catch (EmptyStackException e)
         {
             lparen=0;
             SwitchTo(DEFAULT);
-            return false;
+            return(false);
         }
 
-        if( debugPrint )
+        if (debugPrint)
             System.out.println(
                 " stack pop (" + stateStack.size() + ") : lparen=" +
-                    ( (Integer) h.get("lparen")).intValue() +
-                        " newstate=" + ( (Integer) h.get("lexstate")).intValue() );
+                    ((Integer)h.get("lparen")).intValue() +
+                        " newstate=" + ((Integer)h.get("lexstate")).intValue());
 
-        lparen = ( (Integer) h.get("lparen")).intValue();
-        rparen = ( (Integer) h.get("rparen")).intValue();
+        lparen = ((Integer)h.get("lparen")).intValue();
+        rparen = ((Integer)h.get("rparen")).intValue();
 
-        SwitchTo( ( (Integer) h.get("lexstate")).intValue() );
+        SwitchTo(((Integer)h.get("lexstate")).intValue());
 
-        return true;
+        return(true);
     }
 
     /**
@@ -396,11 +410,10 @@ TOKEN_MGR_DECLS:
      */
     public boolean stateStackPush()
     {
-        if( debugPrint )
-            System.out.println(" (" + stateStack.size() + ") pushing cur state : " +
-                curLexState );
+        if (debugPrint)
+            System.out.println(" (" + stateStack.size() + ") pushing cur state : " + curLexState);
 
-        Hashtable h = new Hashtable();
+        final Hashtable h = new Hashtable();
 
         h.put("lexstate", new Integer( curLexState ) );
         h.put("lparen", new Integer( lparen ));
@@ -449,29 +462,27 @@ TOKEN_MGR_DECLS:
         if (inComment)
             closed = true;
 
-        while( !closed )
+        while (!closed)
         {
             /*
              * look at current state.  If we haven't seen a lparen
              * in this state then we drop a state, because this
              * lparen clearly closes our state
              */
-
-            if( lparen > 0)
+            if (lparen > 0)
             {
                 /*
                  *  if rparen + 1 == lparen, then this state is closed.
                  * Otherwise, increment and keep parsing
                  */
-
-                 if( lparen == rparen + 1)
+                 if(lparen == rparen + 1)
                  {
-                       stateStackPop();
+                    stateStackPop();
                  }
-                else
-                {
+                 else
+                 {
                     rparen++;
-                }
+                 }
 
                  closed = true;
             }
@@ -480,7 +491,6 @@ TOKEN_MGR_DECLS:
                 /*
                  * now, drop a state
                  */
-
                 if(!stateStackPop())
                     break;
             }
@@ -537,9 +547,8 @@ TOKEN:
          * If in REFERENCE and we have seen the dot, then move
          * to REFMOD2 -> Modifier()
          */
-
-        if (curLexState == REFMODIFIER )
-            SwitchTo( REFMOD2 );
+        if (curLexState == REFMODIFIER)
+            SwitchTo(REFMOD2);
     }
 }
 
@@ -579,8 +588,7 @@ TOKEN:
          * because we can (infinitely) chain, ala
          * $foo.bar().blargh().woogie().doogie()
          */
-
-        SwitchTo( REFERENCE );
+        SwitchTo(REFERENCE);
     }
 }
 
@@ -602,7 +610,6 @@ TOKEN:
      *  grammatical context, but I am neither smart nor rested, a receipe
      *  for disaster, another long night with Mr. Parser, or both.
      */
-
     <ESCAPE_DIRECTIVE :  (<DOUBLE_ESCAPE>)* "\\#" (<WORD> | <BRACKETED_WORD>) >
 }
 
@@ -629,12 +636,12 @@ TOKEN:
 {
   <SET_DIRECTIVE: (" "|"\t")*  ("#set" | "#{set}")  (" ")* "(">
     {
-        if (! inComment)
+        if (!inComment)
         {
             inDirective = true;
 
-            if ( debugPrint )
-                System.out.print("#set :  going to " + DIRECTIVE );
+            if (debugPrint)
+                System.out.print("#set :  going to " + DIRECTIVE);
 
             stateStackPush();
             inSet = true;
@@ -644,7 +651,6 @@ TOKEN:
         /*
          *  need the LPAREN action
          */
-
         if (!inComment)
         {
             lparen++;
@@ -653,9 +659,8 @@ TOKEN:
              * If in REFERENCE and we have seen the dot, then move
              * to REFMOD2 -> Modifier()
              */
-
-            if (curLexState == REFMODIFIER )
-                SwitchTo( REFMOD2 );
+            if (curLexState == REFMODIFIER)
+                SwitchTo(REFMOD2);
         }
    }
 }
@@ -666,10 +671,9 @@ MORE :
     /*
      *   Note : DOLLARBANG is a duplicate of DOLLAR.  They must be identical.
      */
-
     <DOLLAR: ("\\")* "$">
     {
-        if (! inComment)
+        if (!inComment)
         {
             /*
              * if we find ourselves in REFERENCE, we need to pop down
@@ -684,8 +688,8 @@ MORE :
 
             inReference = true;
 
-            if ( debugPrint )
-                System.out.print( "$  : going to " + REFERENCE );
+            if (debugPrint)
+                System.out.print( "$  : going to " + REFERENCE);
 
             stateStackPush();
             SwitchTo(REFERENCE);
@@ -694,13 +698,12 @@ MORE :
 
 |   <DOLLARBANG: ("\\")* "$" ("\\")* "!">
     {
-        if (! inComment)
+        if (!inComment)
         {
             /*
              * if we find ourselves in REFERENCE, we need to pop down
              * to end the previous ref
              */
-
             if (curLexState == REFERENCE)
             {
                 inReference = false;
@@ -709,8 +712,8 @@ MORE :
 
             inReference = true;
 
-            if ( debugPrint )
-                System.out.print( "$!  : going to " + REFERENCE );
+            if (debugPrint)
+                System.out.print( "$!  : going to " + REFERENCE);
 
             stateStackPush();
             SwitchTo(REFERENCE);
@@ -724,7 +727,7 @@ MORE :
 	        input_stream.backup(1);
 	        inComment = true;
 	        stateStackPush();
-	        SwitchTo( IN_FORMAL_COMMENT);
+	        SwitchTo(IN_FORMAL_COMMENT);
     	}
     }
 
@@ -734,13 +737,13 @@ MORE :
     	{
 	        inComment=true;
 	        stateStackPush();
-	        SwitchTo( IN_MULTI_LINE_COMMENT );
+	        SwitchTo(IN_MULTI_LINE_COMMENT);
     	}
     }
 
-|   <HASH : "#" >
+|   <HASH: "#" >
     {
-        if (! inComment)
+        if (!inComment)
         {
             /*
              * We can have the situation where #if($foo)$foo#end.
@@ -748,8 +751,7 @@ MORE :
              * I don't really like this, but I can't think of a legal way
              * you are going into DIRECTIVE while in REFERENCE.  -gmj
              */
-
-            if (curLexState == REFERENCE || curLexState == REFMODIFIER )
+            if (curLexState == REFERENCE || curLexState == REFMODIFIER)
             {
                 inReference = false;
                 stateStackPop();
@@ -757,8 +759,8 @@ MORE :
 
             inDirective = true;
 
-            if ( debugPrint )
-                System.out.print("# :  going to " + DIRECTIVE );
+            if (debugPrint)
+                System.out.print("# :  going to " + DIRECTIVE);
 
             stateStackPush();
             SwitchTo(PRE_DIRECTIVE);
@@ -786,7 +788,7 @@ TOKEN :
             stateStackPush();
             SwitchTo(IN_SINGLE_LINE_COMMENT);
         }
-     }
+   }
 }
 
 TOKEN :
@@ -809,13 +811,12 @@ TOKEN :
      inComment = false;
      stateStackPop();
   }
-
 }
 
 <IN_FORMAL_COMMENT>
 TOKEN :
 {
-  <FORMAL_COMMENT: "*#" >
+  <FORMAL_COMMENT: "*#">
   {
     inComment = false;
     stateStackPop();
@@ -825,7 +826,7 @@ TOKEN :
 <IN_MULTI_LINE_COMMENT>
 TOKEN :
 {
-  <MULTI_LINE_COMMENT: "*#" >
+  <MULTI_LINE_COMMENT: "*#">
   {
     inComment = false;
     stateStackPop();
@@ -845,7 +846,7 @@ SKIP :
  * ---------------------------------------------------------------------- */
 
 <DIRECTIVE,REFMOD2>
-TOKEN:
+SKIP:
 {
     <WHITESPACE : ([" ","\t", "\n", "\r"])+ >
 }
@@ -853,7 +854,6 @@ TOKEN:
 <DIRECTIVE,REFMOD2>
 TOKEN :
 {
-//   <STRING_LITERAL: ( "\"" ( ~["\"","\n","\r"] )* "\"" ) | ( "'" ( ~["'","\n","\r"] )* "'" ) >
   < STRING_LITERAL:
       ("\""
         (   (~["\""])
@@ -893,7 +893,7 @@ TOKEN :
 TOKEN:
 {
    <TRUE: "true">
-|   <FALSE: "false">
+|  <FALSE: "false">
 }
 
 <DIRECTIVE>
@@ -901,7 +901,7 @@ TOKEN :
 {
     <NEWLINE: "\n" | "\r" | "\r\n" >
     {
-        if ( debugPrint )
+        if (debugPrint)
             System.out.println(" NEWLINE :");
 
         stateStackPop();
@@ -923,25 +923,25 @@ TOKEN :
 |   <MULTIPLY: "*">
 |   <DIVIDE: "/">
 |   <MODULUS: "%">
-|   <BINARY_AND: "&" | "or" >
-|   <BINARY_OR: "|" | "or" >
-|   <LOGICAL_AND: "&&" | "and" >
-|   <LOGICAL_OR: "||" | "or" >
-|   <LOGICAL_LT: "<" | "lt" >
-|   <LOGICAL_LE: "<=" | "le" >
-|   <LOGICAL_GT: ">" | "gt" >
-|   <LOGICAL_GE: ">=" | "ge" >
-|   <LOGICAL_EQUALS: "==" | "eq" >
-|   <LOGICAL_NOT_EQUALS: "!=" | "ne" >
-|   <LOGICAL_NOT: "!" | "not" >
-|   <EQUALS: "=" >
+|   <BINARY_AND: "&" | "or">
+|   <BINARY_OR: "|" | "or">
+|   <LOGICAL_AND: "&&" | "and">
+|   <LOGICAL_OR: "||" | "or">
+|   <LOGICAL_LT: "<" | "lt">
+|   <LOGICAL_LE: "<=" | "le">
+|   <LOGICAL_GT: ">" | "gt">
+|   <LOGICAL_GE: ">=" | "ge">
+|   <LOGICAL_EQUALS: "==" | "eq">
+|   <LOGICAL_NOT_EQUALS: "!=" | "ne">
+|   <LOGICAL_NOT: "!" | "not">
+|   <EQUALS: "=">
 }
 
 <PRE_DIRECTIVE>
 TOKEN :
 {
     <END: ( "end" ( ( " " | "\t" )* ( "\n" | "\r" | "\r\n" ) )? )
-          | ("{end}" ( ( " " | "\t" )* ( "\n" | "\r" | "\r\n" ) )? ) >
+          | ("{end}" ( ( " " | "\t" )* ( "\n" | "\r" | "\r\n" ) )? )>
     {
         inDirective = false;
         stateStackPop();
@@ -949,10 +949,26 @@ TOKEN :
 
 |   <FOREACH_DIRECTIVE: "foreach" | "{foreach}">
     {
-        SwitchTo(DIRECTIVE);
+      SwitchTo(DIRECTIVE);
     }
 
-|   <MACRO_DIRECTIVE : "macro" | "{macro}">
+|   <MACRO_DIRECTIVE : ("macro" | "{macro}") (" " | "\t")* <LPAREN> (" " | "\t")* <WORD>>
+    {
+      /*
+       * extract everything afer LPAREN,
+       * register macro with the string after LPAREN as name,
+       * push every thing after LPAREN back,
+       * and munge the image to be everything befor LPAREN
+       */
+      final String[] astrParts = matchedToken.image.split("\\(");
+      VelocityParser.addMacroName(astrParts[1]);
+      input_stream.backup(astrParts[1].length() + 1);
+      matchedToken.image = astrParts[0];
+
+      SwitchTo(DIRECTIVE);
+    }
+
+|   <INCLUDE_DIRECTIVE : "include" | "{include}">
     {
         SwitchTo(DIRECTIVE);
     }
@@ -969,23 +985,55 @@ TOKEN :
 
 |   <ELSE_DIRECTIVE:
           ( "else" ( ( " " | "\t" )* ( "\n" | "\r" | "\r\n" ) )? )
-        | ( "{else}" ( ( " " | "\t" )* ( "\n" | "\r" | "\r\n" ) )? )  >
+        | ( "{else}" ( ( " " | "\t" )* ( "\n" | "\r" | "\r\n" ) )? )>
      {
         inDirective = false;
         stateStackPop();
     }
 
-|   <STOP_DIRECTIVE: "stop" | "{stop}" >
+|   <STOP_DIRECTIVE: "stop" | "{stop}">
     {
         inDirective = false;
         stateStackPop();
     }
+
+|  <MACROCALL_DIRECTIVE : (<WORD> | <BRACKETED_WORD>)>
+   {
+      final String strDirectiveName;
+      final boolean fIsBracketedWord;
+
+      if (matchedToken.image.length() > 0)
+      {
+         if (matchedToken.image.charAt(1) == '{')
+         {
+            fIsBracketedWord = true;
+            strDirectiveName = matchedToken.image.substring(2, image.length() - 1);
+         }
+         else
+         {
+            fIsBracketedWord = false;
+            strDirectiveName = matchedToken.image.substring(1);
+         }
+
+         if (!VelocityParser.isMacro(strDirectiveName))
+         {
+            if (fIsBracketedWord)
+               matchedToken.kind = VelocityParserConstants.BRACKETED_WORD;
+            else
+               matchedToken.kind = VelocityParserConstants.WORD;
+         }
+         else
+            matchedToken.image = strDirectiveName;
+      }
+
+      SwitchTo(DIRECTIVE);
+   }
 }
 
 <PRE_DIRECTIVE,DIRECTIVE,REFMOD2>
 TOKEN:
 {
-   <#DIGIT: [ "0"-"9" ] >
+   <#DIGIT: [ "0"-"9" ]>
 
     /*
      * treat FLOATING_POINT_LITERAL and INTEGER_LITERAL differently as a range can only handle integers.
@@ -995,15 +1043,16 @@ TOKEN:
      * Note -- we also define an integer as ending with a double period,
      * in order to avoid 1..3 being defined as floating point (1.) then a period, then a integer
     */
-|   <INTEGER_LITERAL: ("-")? (<DIGIT>)+ ("..")? >
+|   <INTEGER_LITERAL: ("-")? (<DIGIT>)+ ("..")?>
     {
 
         /*
          * Remove the double period if it is there
          */
-        if (matchedToken.image.endsWith("..")) {
+        if (matchedToken.image.endsWith(".."))
+        {
             input_stream.backup(2);
-            matchedToken.image = matchedToken.image.substring(0,matchedToken.image.length()-2);
+            matchedToken.image = matchedToken.image.substring(0, matchedToken.image.length()-2);
         }
 
         /*
@@ -1011,8 +1060,7 @@ TOKEN:
          *    ex.  #set $foo = $foo + 3
          *  because we want to handle the \n after
          */
-
-        if ( lparen == 0 && !inSet && curLexState != REFMOD2)
+        if (lparen == 0 && !inSet && curLexState != REFMOD2)
         {
             stateStackPop();
         }
@@ -1029,24 +1077,22 @@ TOKEN:
          *    ex.  #set $foo = $foo + 3
          *  because we want to handle the \n after
          */
-
-        if ( lparen == 0 && !inSet && curLexState != REFMOD2)
+        if (lparen == 0 && !inSet && curLexState != REFMOD2)
         {
             stateStackPop();
-    }
-}
+        }
+     }
 |
-    <#EXPONENT: ["e","E"] (["+","-"])? (["0"-"9"])+ >
-
+    <#EXPONENT: ["e","E"] (["+","-"])? (["0"-"9"])+>
 }
 
 <PRE_DIRECTIVE,DIRECTIVE>
 TOKEN:
 {
-    <#LETTER: [ "a"-"z", "A" - "Z" ] >
-|   <#DIRECTIVE_CHAR: [ "a"-"z", "A"-"Z", "0"-"9", "_" ] >
-|   <WORD:  ( <LETTER> | ["_"]) (<DIRECTIVE_CHAR>)* >
-|   <BRACKETED_WORD:  "{" ( <LETTER> | ["_"]) (<DIRECTIVE_CHAR>)* "}" >
+   <#LETTER: [ "a"-"z", "A" - "Z" ]>
+|  <#DIRECTIVE_CHAR: [ "a"-"z", "A"-"Z", "0"-"9", "_" ]>
+|  <WORD:  ( <LETTER> | ["_"]) (<DIRECTIVE_CHAR>)* >
+|  <BRACKETED_WORD:  "{" ( <LETTER> | ["_"]) (<DIRECTIVE_CHAR>)* "}">
 }
 
 
@@ -1076,30 +1122,28 @@ TOKEN:
 <REFERENCE,REFMODIFIER,REFMOD2>
 TOKEN :
 {
-    <#ALPHA_CHAR: ["a"-"z", "A"-"Z"] >
-|   <#ALPHANUM_CHAR: [ "a"-"z", "A"-"Z", "0"-"9" ] >
-|   <#IDENTIFIER_CHAR: [ "a"-"z", "A"-"Z", "0"-"9", "-", "_" ] >
-|   <IDENTIFIER:  ( <ALPHA_CHAR> | ["_"]) (<IDENTIFIER_CHAR>)* >
+    <#ALPHA_CHAR: ["a"-"z", "A"-"Z"]>
+|   <#ALPHANUM_CHAR: [ "a"-"z", "A"-"Z", "0"-"9" ]>
+|   <#IDENTIFIER_CHAR: [ "a"-"z", "A"-"Z", "0"-"9", "-", "_" ]>
+|   <IDENTIFIER:  ( <ALPHA_CHAR> | ["_"]) (<IDENTIFIER_CHAR>)*>
 |   <DOT: "." <ALPHA_CHAR>>
     {
         /*
          * push the alpha char back into the stream so the following identifier
          * is complete
          */
-
         input_stream.backup(1);
 
         /*
          * and munge the <DOT> so we just get a . when we have normal text that
          * looks like a ref.ident
          */
-
         matchedToken.image = ".";
 
-        if ( debugPrint )
+        if (debugPrint)
             System.out.print("DOT : switching to " + REFMODIFIER);
-        SwitchTo(REFMODIFIER);
 
+        SwitchTo(REFMODIFIER);
     }
 }
 
@@ -1117,29 +1161,28 @@ TOKEN :
 <REFERENCE,REFMODIFIER,REFMOD2>
 SPECIAL_TOKEN :
 {
-    <REFERENCE_TERMINATOR: ~[] >
+    <REFERENCE_TERMINATOR: ~[]>
     {
         /*
          * push every terminator character back into the stream
          */
-
         input_stream.backup(1);
 
         inReference = false;
 
-        if ( debugPrint )
+        if (debugPrint)
             System.out.print("REF_TERM :");
 
         stateStackPop();
     }
 }
 
-<PRE_DIRECTIVE>
+<PRE_DIRECTIVE,DIRECTIVE>
 SPECIAL_TOKEN :
 {
-    <DIRECTIVE_TERMINATOR: ~[] >
+    <DIRECTIVE_TERMINATOR: ~[]>
     {
-        if ( debugPrint )
+        if (debugPrint)
             System.out.print("DIRECTIVE_TERM :");
 
         input_stream.backup(1);
@@ -1159,8 +1202,16 @@ SPECIAL_TOKEN :
  */
 SimpleNode process() : {}
 {
-   ( Statement() )* <EOF>
-   { return jjtThis; }
+   try
+   {
+      (Statement())*
+   }
+   catch (ParseException pe)
+   {
+      recover(pe);
+   }
+   <EOF>
+   {return(jjtThis);}
 }
 
 /**
@@ -1173,6 +1224,7 @@ void Statement() #void : {}
    {
     ForEachStatement()
 |   MacroStatement()
+|   IncludeStatement()
 |   IfStatement()
 |   StopStatement()
 |   LOOKAHEAD(2) Reference()
@@ -1185,7 +1237,7 @@ void Statement() #void : {}
    }
    catch (ParseException pe)
    {
-      recover(pe, RPAREN);
+      recover(pe);
    }
 }
 
@@ -1209,7 +1261,7 @@ void EscapedDirective() : {}
         /*
          *  churn and burn..
          */
-        t.image = escapedDirective( t.image );
+        t.image = escapedDirective(t.image);
     }
    }
    catch (ParseException pe)
@@ -1244,9 +1296,12 @@ void Escape() : {}
         /*
          * first, check to see if we have a control directive
          */
-        switch(t.next.kind ) {
+        switch(t.next.kind )
+        {
             case FOREACH_DIRECTIVE :
             case MACRO_DIRECTIVE :
+            case MACROCALL_DIRECTIVE :
+            case INCLUDE_DIRECTIVE :
             case IF_DIRECTIVE :
             case ELSE_DIRECTIVE :
             case ELSEIF_DIRECTIVE :
@@ -1261,7 +1316,7 @@ void Escape() : {}
          */
         String nTag = t.next.image.substring(1);
 
-        if ( isDirective(nTag) )
+        if (isDirective(nTag))
             control = true;
     }
    }
@@ -1275,7 +1330,7 @@ void Comment() : {}
 {
    try
    {
-	<SINGLE_LINE_COMMENT_START> ( <SINGLE_LINE_COMMENT> ) ?
+	 <SINGLE_LINE_COMMENT_START> (<SINGLE_LINE_COMMENT>) ?
 |   <MULTI_LINE_COMMENT>
 |   <FORMAL_COMMENT>
    }
@@ -1328,47 +1383,47 @@ int DirectiveArg() #void : {}
 {
     Reference()
     {
-        return VelocityParserTreeConstants.JJTREFERENCE;
+        return(VelocityParserTreeConstants.JJTREFERENCE);
     }
 |   Word()
     {
-        return VelocityParserTreeConstants.JJTWORD;
+        return(VelocityParserTreeConstants.JJTWORD);
     }
 |   StringLiteral()
     {
-        return VelocityParserTreeConstants.JJTSTRINGLITERAL;
+        return(VelocityParserTreeConstants.JJTSTRINGLITERAL);
     }
 
 |   IntegerLiteral()
     {
-        return VelocityParserTreeConstants.JJTINTEGERLITERAL;
+        return(VelocityParserTreeConstants.JJTINTEGERLITERAL);
     }
     /*
      * Need to put this before the floating point expansion
      */
-|   LOOKAHEAD(  <LBRACKET> [<WHITESPACE>] ( Reference() | IntegerLiteral())     [<WHITESPACE>] <DOUBLEDOT> ) IntegerRange()
+|   LOOKAHEAD(<LBRACKET> ( Reference() | IntegerLiteral()) <DOUBLEDOT>) IntegerRange()
     {
-        return VelocityParserTreeConstants.JJTINTEGERRANGE;
+        return(VelocityParserTreeConstants.JJTINTEGERRANGE);
     }
 |   FloatingPointLiteral()
     {
-        return VelocityParserTreeConstants.JJTFLOATINGPOINTLITERAL;
+        return(VelocityParserTreeConstants.JJTFLOATINGPOINTLITERAL);
     }
 |   Map()
     {
-        return VelocityParserTreeConstants.JJTMAP;
+        return(VelocityParserTreeConstants.JJTMAP);
     }
 |   ObjectArray()
     {
-        return VelocityParserTreeConstants.JJTOBJECTARRAY;
+        return(VelocityParserTreeConstants.JJTOBJECTARRAY);
     }
 |   True()
     {
-        return VelocityParserTreeConstants.JJTTRUE;
+        return(VelocityParserTreeConstants.JJTTRUE);
     }
 |   False()
     {
-        return VelocityParserTreeConstants.JJTFALSE;
+        return(VelocityParserTreeConstants.JJTFALSE);
     }
 }
 
@@ -1392,10 +1447,14 @@ SimpleNode Directive() :
      * note that if we were escaped, that is now handled by
      * EscapedDirective()
      */
-    ((t = <WORD>) | (t = <BRACKETED_WORD>))
+    ((t = <MACROCALL_DIRECTIVE>) | (t = <WORD>) | (t = <BRACKETED_WORD>))
     {
         String directiveName;
-        if (t.kind == VelocityParserConstants.BRACKETED_WORD)
+        if (t.kind == VelocityParserConstants.MACROCALL_DIRECTIVE)
+        {
+            directiveName = t.image;
+        }
+        else if (t.kind == VelocityParserConstants.BRACKETED_WORD)
         {
             directiveName = t.image.substring(2, t.image.length() - 1);
         }
@@ -1411,7 +1470,7 @@ SimpleNode Directive() :
             /*
              *  if null, then not a real directive, but maybe a Velocimacro
              */
-            isVM = isVelocityMacro(directiveName);
+            isVM = VelocityParser.isMacro(directiveName);
 
             /*
              *  Currently, all VMs are LINE directives
@@ -1433,13 +1492,13 @@ SimpleNode Directive() :
 
 
      /**
-      * Look for the pattern [WHITESPACE] <LPAREN>
+      * Look for the pattern [<LPAREN>
       */
-    (LOOKAHEAD( { isLeftParenthesis() } )
+    (LOOKAHEAD({isLeftParenthesis()})
     /*
      *  if this is indeed a token, match the #foo ( arg ) pattern
      */
-    (([<WHITESPACE>] <LPAREN>) ( LOOKAHEAD(2) [<WHITESPACE>] [<COMMA> [<WHITESPACE>]]
+    ((<LPAREN>) ([<COMMA>]
 
             argType = DirectiveArg()
             {
@@ -1454,7 +1513,7 @@ SimpleNode Directive() :
                 argPos++;
             }
 
-    )* [<WHITESPACE>] <RPAREN>)
+    )* <RPAREN>)
     {
 
         if (directiveType  == Directive.LINE)
@@ -1464,7 +1523,7 @@ SimpleNode Directive() :
     }
     |
     {
-	
+
         /**
          * Not a directive
          */
@@ -1476,7 +1535,7 @@ SimpleNode Directive() :
     /*
      *  and the following block if the PD needs it
      */
-    ( Statement() )* #Block
+    (Statement())* #Block
     <END>
     {
         /*
@@ -1501,13 +1560,11 @@ void Map() : {}
 {
     <LEFT_CURLEY>
     (
-      LOOKAHEAD(2) Parameter() <COLON> Parameter() (<COMMA> Parameter() <COLON> Parameter() )*
-      |
-      [ <WHITESPACE> ]
-     )
-     
+      Parameter() <COLON> Parameter() (<COMMA> Parameter() <COLON> Parameter())*
+    )
+
      /** note: need both tokens as they are generated in different states **/
-     ( <RIGHT_CURLEY> | <RCURLY> )
+     (<RIGHT_CURLEY> | <RCURLY>)
 }
 
 void ObjectArray() : {}
@@ -1523,11 +1580,11 @@ void ObjectArray() : {}
  */
 void IntegerRange() : {}
 {
-    <LBRACKET> [<WHITESPACE>]
-    ( Reference() | IntegerLiteral())
-    [<WHITESPACE>] <DOUBLEDOT> [<WHITESPACE>]
+    <LBRACKET>
     (Reference() | IntegerLiteral())
-    [<WHITESPACE>] <RBRACKET>
+    <DOUBLEDOT>
+    (Reference() | IntegerLiteral())
+    <RBRACKET>
 }
 
 
@@ -1538,19 +1595,15 @@ void IntegerRange() : {}
  */
 void Parameter() #void: {}
 {
-    [<WHITESPACE>]
-    (
         StringLiteral()
         | IntegerLiteral()
-        | LOOKAHEAD(  <LBRACKET> [<WHITESPACE>]    ( Reference() | IntegerLiteral())     [<WHITESPACE>] <DOUBLEDOT> ) IntegerRange()
+        | LOOKAHEAD(  <LBRACKET> (Reference() | IntegerLiteral()) <DOUBLEDOT>) IntegerRange()
         | Map()
         | ObjectArray()
         | True()
         | False()
         | Reference()
         | FloatingPointLiteral()
-        )
-    [ <WHITESPACE>]
 }
 
 /**
@@ -1567,19 +1620,18 @@ void Reference() : {}
 {
    try
    {
-    /*
-     *  A reference is either ${<FOO>} or  $<FOO>
-     */
-
+     /*
+      *  A reference is either ${<FOO>} or  $<FOO>
+      */
       (
          <IDENTIFIER>
-         (LOOKAHEAD(2) <DOT> (LOOKAHEAD(3) Method() | Identifier() ))*
+         (LOOKAHEAD(2) <DOT> (LOOKAHEAD(3) Method() | Identifier()))*
       )
       |
       (
          <LCURLY>
          <IDENTIFIER>
-         (LOOKAHEAD(2) <DOT> (LOOKAHEAD(3) Method() | Identifier() ))*
+         (LOOKAHEAD(2) <DOT> (LOOKAHEAD(3) Method() | Identifier()))*
          <RCURLY>
       )
    }
@@ -1587,7 +1639,6 @@ void Reference() : {}
    {
       recover(pe, RPAREN);
    }
-
 }
 
 void True() : {}
@@ -1636,8 +1687,16 @@ void ForEachStatement() : {}
 {
    try
    {
-    <FOREACH_DIRECTIVE> [<WHITESPACE>] <LPAREN> [<WHITESPACE>] <IDENTIFIER> [<WHITESPACE>] <WORD_IN> [<WHITESPACE>] Reference() [<WHITESPACE>] <RPAREN>
-    ( Statement() )* #Block
+    <FOREACH_DIRECTIVE>
+    <LPAREN>
+       Identifier() <WORD_IN>
+       (
+           Reference()
+         | LOOKAHEAD(<LBRACKET> (Reference() | IntegerLiteral()) <DOUBLEDOT>) IntegerRange()
+         | ObjectArray()
+       )
+    <RPAREN>
+    (Statement())* #Block
     <END>
    }
    catch (ParseException pe)
@@ -1653,12 +1712,12 @@ void MacroStatement() : {}
 }
    try
    {
-    <MACRO_DIRECTIVE> [<WHITESPACE>] <LPAREN> [<WHITESPACE>] <WORD>
+    <MACRO_DIRECTIVE> <LPAREN> <WORD>
     {
       strMacroName = token.image;
     }
-    ([<WHITESPACE>] Identifier())* [<WHITESPACE>] <RPAREN>
-    ( Statement() )* #Block
+    (Identifier())* <RPAREN>
+    (Statement())* #Block
     <END>
     {
       addMacroName(strMacroName);
@@ -1670,11 +1729,31 @@ void MacroStatement() : {}
    }
 }
 
+void IncludeStatement() : {}
+{
+   try
+   {
+      <INCLUDE_DIRECTIVE>
+      <LPAREN>
+         (Identifier() | StringLiteral())
+         (
+            [<COMMA>]
+            (Identifier() | StringLiteral())
+         )*
+      <RPAREN>
+      [<NEWLINE>]
+   }
+   catch (ParseException pe)
+   {
+      recover(pe, RPAREN);
+   }
+}
+
 void IfStatement() : {}
 {
    try
    {
-    <IF_DIRECTIVE> [<WHITESPACE>] <LPAREN> Expression() <RPAREN>
+    <IF_DIRECTIVE> <LPAREN> Expression() <RPAREN>
     ( Statement() )* #Block
     [ LOOKAHEAD(1) ( ElseIfStatement() )+ ]
     [ LOOKAHEAD(1) ElseStatement() ]
@@ -1690,8 +1769,8 @@ void ElseStatement() : {}
 {
    try
    {
-   <ELSE_DIRECTIVE>
-    ( Statement() )* #Block
+      <ELSE_DIRECTIVE>
+      (Statement())* #Block
    }
    catch (ParseException pe)
    {
@@ -1703,9 +1782,9 @@ void ElseIfStatement() : {}
 {
    try
    {
-    <ELSEIF_DIRECTIVE> [<WHITESPACE>]
-    <LPAREN> Expression() <RPAREN>
-    ( Statement() )* #Block
+      <ELSEIF_DIRECTIVE>
+      <LPAREN> Expression() <RPAREN>
+      (Statement())* #Block
    }
    catch (ParseException pe)
    {
@@ -1715,22 +1794,21 @@ void ElseIfStatement() : {}
 
 /**
  *  Currently support both types of set :
- *   #set( expr )
+ *   #set(expr)
  *   #set expr
  */
 void SetDirective() : {}
 {
    try
    {
-    <SET_DIRECTIVE>([<WHITESPACE>] Reference() [<WHITESPACE>] <EQUALS>  Expression() <RPAREN>
+    <SET_DIRECTIVE>(Reference() <EQUALS>  Expression() <RPAREN>
     {
         /*
          * ensure that inSet is false.  Leads to some amusing bugs...
          */
-
         token_source.inSet = false;
     }
-    [<NEWLINE>] )
+    [<NEWLINE>])
    }
    catch (ParseException pe)
    {
@@ -1822,26 +1900,22 @@ void MultiplicativeExpression() #void : {}
 
 void UnaryExpression() #void : {}
 {
-     LOOKAHEAD(2)  [<WHITESPACE>]  <LOGICAL_NOT>  UnaryExpression() #NotNode(1)
+    LOOKAHEAD(2) <LOGICAL_NOT>  UnaryExpression() #NotNode(1)
 |   PrimaryExpression()
 }
 
 void PrimaryExpression() #void : {}
 {
-    [<WHITESPACE>]
-    (
      StringLiteral()
     | Reference()
     | IntegerLiteral()
-    | LOOKAHEAD(  <LBRACKET> [<WHITESPACE>]    ( Reference() | IntegerLiteral())     [<WHITESPACE>] <DOUBLEDOT> ) IntegerRange()
+    | LOOKAHEAD(<LBRACKET> ( Reference() | IntegerLiteral()) <DOUBLEDOT>) IntegerRange()
     | FloatingPointLiteral()
     | Map()
     | ObjectArray()
     | True()
     | False()
     | <LPAREN>  Expression()  <RPAREN>
-     )
-    [<WHITESPACE>]
 }
 
 
