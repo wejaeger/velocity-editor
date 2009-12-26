@@ -29,6 +29,7 @@ public class VTLSettingsInitializer extends Settings.AbstractInitializer
       super(NAME);
    }
 
+   @SuppressWarnings("unchecked")
    public void updateSettingsMap(final Class kitClass, final Map settingsMap)
    {
       if (kitClass == VTLEditorKit.class)
