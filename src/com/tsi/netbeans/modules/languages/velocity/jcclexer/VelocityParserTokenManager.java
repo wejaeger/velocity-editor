@@ -4806,8 +4806,8 @@ void TokenLexicalActions(Token matchedToken)
        */
       final String[] astrParts = matchedToken.image.split("\u005c\u005c(");
       VelocityParser.addMacroName(astrParts[1]);
-      input_stream.backup(astrParts[1].length() + 1);
-      matchedToken.image = astrParts[0];
+      input_stream.backup(astrParts[1].length() + 1 + (astrParts[0].length() - astrParts[0].trim().length()));
+      matchedToken.image = astrParts[0].trim();
 
       SwitchTo(DIRECTIVE);
          break;

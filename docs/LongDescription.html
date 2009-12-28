@@ -10,17 +10,17 @@
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
    </head>
    <body>
-   	Provides basic support to Velocity's *.vm and *.vsl files. Syntax coloring and basic error highlighting
+   	Provides basic support to Velocity's *.vm and *.vsl files. Syntax coloring, basic error highlighting and braces matching
    	is achieved with a lexer and parser based on
       <a href="http://velocity.apache.org/"> Apache Velocity's</a> 1.6.2 specification and compiled with
       <a href="https://javacc.dev.java.net/"> JavaCC 5.0</a>.
       <p><u>Current Version:</u></p>
       <p>
-         Supports syntax- error highlighting and code folding.
+         Supports syntax- error highlighting, code folding and braces matching.
       </p>
       <p><u>Konwn issuses:</u></p>
       	<ul>
-      		<li>Syntax color is lost when editing variables, properties and methods. A workaround is to delete and insert the preceeding $ sign.</li>
+      		<li>Syntax color is lost when editing properties and methods. A workaround is to delete and insert the preceeding $ sign.</li>
       		<li>Error recovery is rudimentary. At the present time the recovery point is allways the next LPAREN. Needs to be revised.</li>
       		<li>It should be checked, that the number of arguments in a macro call is the same as in the corresponding macro definition.</li>
       		<li>No syntax coloring for directives #parse, #evaluate, #define</li>

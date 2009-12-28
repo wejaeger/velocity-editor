@@ -3,5 +3,5 @@ OpenIDE-Module: com.tsi.netbeans.modules.languages.velocity
 OpenIDE-Module-Install: com/tsi/netbeans/modules/languages/velocity/Installer.class
 OpenIDE-Module-Layer: com/tsi/netbeans/modules/languages/velocity/layer.xml
 OpenIDE-Module-Localizing-Bundle: com/tsi/netbeans/modules/languages/velocity/Bundle.properties
-OpenIDE-Module-Specification-Version: 2.1.0
+OpenIDE-Module-Specification-Version: 2.2.0
 

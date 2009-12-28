@@ -30,6 +30,11 @@
             <file name="EditorKit.instance">
                <attr name="instanceClass" stringvalue="com.tsi.netbeans.modules.languages.velocity.editor.VTLEditorKit"/>
             </file>
+            <folder name="BracesMatchers">
+               <file name="com-tsi-netbeans-modules-languages-velocity-editor-bracesmatching-VTLBracesMatcher.instance">
+                  <attr name="position" intvalue="130"/>
+               </file>
+            </folder>
             <file name="language.instance">
                <attr name="instanceCreate" methodvalue="com.tsi.netbeans.modules.languages.velocity.lexer.VTLTokenId.getLanguage"/>
                <attr name="instanceOf" stringvalue="org.netbeans.api.lexer.Language"/>
