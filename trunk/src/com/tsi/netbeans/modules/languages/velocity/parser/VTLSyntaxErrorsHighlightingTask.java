@@ -58,8 +58,8 @@ public class VTLSyntaxErrorsHighlightingTask extends ParserResultTask
          for (final ParseException syntaxError : syntaxErrors)
          {
             final Token token  = syntaxError.currentToken;
-            final int   iStart = NbDocument.findLineOffset((StyledDocument)document, token.beginLine - 1) + token.beginColumn - 1;
-            final int   iEnd   = NbDocument.findLineOffset((StyledDocument)document, token.endLine - 1) + token.endColumn;
+            final int   iStart = NbDocument.findLineOffset((StyledDocument)document, Math.max(token.beginLine - 1, 0)) + Math.max(token.beginColumn - 1, 0);
+            final int   iEnd   = NbDocument.findLineOffset((StyledDocument)document, Math.max(token.endLine - 1, 0)) + token.endColumn;
 
             final ErrorDescription errorDescription = ErrorDescriptionFactory.createErrorDescription
             (

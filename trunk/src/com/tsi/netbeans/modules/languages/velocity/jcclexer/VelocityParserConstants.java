@@ -192,7 +192,7 @@ public interface VelocityParserConstants {
     "<DOLLARBANG>",
     "<token of kind 16>",
     "\"#*\"",
-    "\"#\"",
+    "<HASH>",
     "\"##\"",
     "\"\\\\\\\\\"",
     "\"\\\\\"",

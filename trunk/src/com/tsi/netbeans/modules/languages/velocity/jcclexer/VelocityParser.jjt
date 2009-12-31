@@ -208,7 +208,8 @@ public class VelocityParser
         }
         catch (TokenMgrError tme)
         {
-           recover(new ParseException(token, new int[0][0], new String[] {"Lexical error: " + tme.toString()}));
+           if (token.next != null)
+              recover(new ParseException(token, new int[0][0], new String[] {"Lexical error: " + tme.toString()}));
         }
         catch (Exception e)
         {
@@ -679,7 +680,6 @@ MORE :
              * if we find ourselves in REFERENCE, we need to pop down
              * to end the previous ref
              */
-
             if (curLexState == REFERENCE)
             {
                 inReference = false;
@@ -741,8 +741,10 @@ MORE :
     	}
     }
 
-|   <HASH: "#" >
+|   <HASH: "#" ~["#"]>
     {
+        input_stream.backup(1);
+        image.deleteCharAt(image.length() - 1);
         if (!inComment)
         {
             /*
@@ -760,7 +762,7 @@ MORE :
             inDirective = true;
 
             if (debugPrint)
-                System.out.print("# :  going to " + DIRECTIVE);
+                System.out.print("# :  going to " + PRE_DIRECTIVE);
 
             stateStackPush();
             SwitchTo(PRE_DIRECTIVE);
@@ -836,7 +838,7 @@ TOKEN :
 <IN_SINGLE_LINE_COMMENT,IN_FORMAL_COMMENT,IN_MULTI_LINE_COMMENT>
 SKIP :
 {
-  < ~[] >
+  <~[]>
 }
 
 /* -----------------------------------------------------------------------
@@ -854,7 +856,7 @@ SKIP:
 <DIRECTIVE,REFMOD2>
 TOKEN :
 {
-  < STRING_LITERAL:
+  <STRING_LITERAL:
       ("\""
         (   (~["\""])
           | ("\\"
@@ -883,8 +885,7 @@ TOKEN :
          *      don't forget to account for the beloved yet wierd #set
          *  - finally, if we are in REFMOD2 (remember : $foo.bar( ) then " is ok!
          */
-
-         if( curLexState == DIRECTIVE && !inSet && lparen == 0)
+         if(curLexState == DIRECTIVE && !inSet && lparen == 0)
             stateStackPop();
     }
 }
@@ -1002,7 +1003,7 @@ TOKEN :
       final String strDirectiveName;
       final boolean fIsBracketedWord;
 
-      if (matchedToken.image.length() > 0)
+      if (matchedToken.image.length() > 1)
       {
          if (matchedToken.image.charAt(1) == '{')
          {

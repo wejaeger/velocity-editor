@@ -39,24 +39,27 @@ final class VTLFoldInfo implements Comparable
    @Override
    public int hashCode()
    {
-      return 1;
+      return(1);
    }
 
    @Override
    public boolean equals(final Object oObject)
    {
       final boolean fRet;
+
       if (oObject instanceof VTLFoldInfo)
          fRet = (compareTo(oObject) == 0);
       else
          fRet = false;
-      return fRet;
+
+      return(fRet);
    }
 
    public int compareTo(final Object object)
    {
       final VTLFoldInfo localFoldInfo = (VTLFoldInfo)object;
-      final int iRet;
+      final int         iRet;
+
       if (m_iStart.getOffset() < localFoldInfo.m_iStart.getOffset())
          iRet = -1;
       else if (m_iStart.getOffset() > localFoldInfo.m_iStart.getOffset())
@@ -67,6 +70,7 @@ final class VTLFoldInfo implements Comparable
          iRet = 1;
       else
          iRet = 0;
-      return iRet;
+
+      return(iRet);
    }
 }

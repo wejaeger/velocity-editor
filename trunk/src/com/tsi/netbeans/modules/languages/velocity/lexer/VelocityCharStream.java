@@ -47,7 +47,12 @@ public class VelocityCharStream implements CharStream
    @Override
    public char BeginToken() throws IOException
    {
-      return((char)m_Input.read());
+      final int i = m_Input.read();
+
+      if (i == LexerInput.EOF)
+         throw new IOException("EOF encountered");
+
+      return((char)i);
    }
 
    @Override

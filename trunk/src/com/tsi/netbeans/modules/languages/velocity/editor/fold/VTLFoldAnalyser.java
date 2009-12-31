@@ -10,6 +10,7 @@
 package com.tsi.netbeans.modules.languages.velocity.editor.fold;
 
 import com.tsi.netbeans.modules.languages.velocity.jcclexer.Token;
+import com.tsi.netbeans.modules.languages.velocity.jcclexer.VelocityParserConstants;
 import com.tsi.netbeans.modules.languages.velocity.jcclexer.node.ASTElseIfStatement;
 import com.tsi.netbeans.modules.languages.velocity.jcclexer.node.ASTElseStatement;
 import com.tsi.netbeans.modules.languages.velocity.jcclexer.node.ASTForEachStatement;
@@ -56,57 +57,64 @@ class VTLFoldAnalyser extends VelocityAnalyser
    @Override
    public Object visit(final ASTMacroStatement node, final Object oData)
    {
-      return (visitImpl(node, oData));
+      return(visitImpl(node, oData));
    }
 
    @Override
    public Object visit(final ASTForEachStatement node, final Object oData)
    {
-      return (visitImpl(node, oData));
+      return(visitImpl(node, oData));
    }
 
    @Override
    public Object visit(final ASTIfStatement node, final Object oData)
    {
-      return (visitImpl(node, oData));
+      return(visitImpl(node, oData));
    }
 
    @Override
    public Object visit(final ASTElseIfStatement node, final Object oData)
    {
-      return (visitImpl(node, oData));
+      return(visitImpl(node, oData));
    }
 
    @Override
    public Object visit(final ASTElseStatement node, final Object oData)
    {
-      return (visitImpl(node, oData));
+      return(visitImpl(node, oData));
    }
 
    private Object visitImpl(final SimpleNode node, final Object oData)
    {
       final Token  firstToken = node.getFirstToken();
       final Token  lastToken  = node.getLastToken();
-      final int    iStart     = NbDocument.findLineOffset(m_Document, firstToken.beginLine - 1) + firstToken.beginColumn - 1;
-      final int    iEnd       = NbDocument.findLineOffset(m_Document, lastToken.endLine - 1) + lastToken.endColumn - (lastToken.image.length() - lastToken.image.trim().length());
-      final String strDesc    = firstToken.image + firstToken.next.image + firstToken.next.next.image + " ...";
-      try
+
+      if (lastToken.kind == VelocityParserConstants.END)
       {
-         final VTLFoldInfo info = new VTLFoldInfo(m_Document, iStart, iEnd, false);
-         final Fold oldFold = m_CurrentFolds.get(info);
-         if (oldFold == null)
+         final int    iStart  = NbDocument.findLineOffset(m_Document, firstToken.beginLine - 1) + firstToken.beginColumn - 1;
+         final int    iEnd    = NbDocument.findLineOffset(m_Document, lastToken.endLine - 1) + lastToken.endColumn - (lastToken.image.length() - lastToken.image.trim().length());
+         final String strDesc = firstToken.image + firstToken.next.image + firstToken.next.next.image + " ...";
+
+         try
          {
-            final Fold fold = m_Operation.addToHierarchy(new FoldType(firstToken.image), strDesc, false, iStart, iEnd, 0, 0, info, m_Transaction);
-            m_CurrentFolds.put(info, fold);
+            final VTLFoldInfo info = new VTLFoldInfo(m_Document, iStart, iEnd, false);
+            final Fold oldFold     = m_CurrentFolds.get(info);
+
+            if (oldFold == null)
+            {
+               final Fold fold = m_Operation.addToHierarchy(new FoldType(firstToken.image), strDesc, false, iStart, iEnd, 0, 0, info, m_Transaction);
+               m_CurrentFolds.put(info, fold);
+            }
+            else
+               ((VTLFoldInfo)m_Operation.getExtraInfo(oldFold)).setState(VTLFoldInfo.State.OLD);
          }
-         else
-            ((VTLFoldInfo)m_Operation.getExtraInfo(oldFold)).setState(VTLFoldInfo.State.OLD);
+         catch (BadLocationException ble)
+         {
+            Logger.getLogger(VTLFoldAnalyser.class.getName()).log(Level.WARNING, null, ble);
+         }
       }
-      catch (BadLocationException ble)
-      {
-         Logger.getLogger(VTLFoldAnalyser.class.getName()).log(Level.WARNING, null, ble);
-      }
-      return node.childrenAccept(this, oData);
+
+      return(node.childrenAccept(this, oData));
    }
 
    public void openTransaction()
@@ -121,6 +129,7 @@ class VTLFoldAnalyser extends VelocityAnalyser
    public void commitTransaction()
    {
       final Set<VTLFoldInfo> untouched = new HashSet<VTLFoldInfo>();
+
       for (final Fold fold : m_CurrentFolds.values())
       {
          final VTLFoldInfo info = ((VTLFoldInfo)m_Operation.getExtraInfo(fold));
