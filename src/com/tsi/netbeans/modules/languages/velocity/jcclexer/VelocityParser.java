@@ -140,7 +140,8 @@ public class VelocityParser/*@bgen(jjtree)*/implements VelocityParserTreeConstan
         }
         catch (TokenMgrError tme)
         {
-           recover(new ParseException(token, new int[0][0], new String[] {"Lexical error: " + tme.toString()}));
+           if (token.next != null)
+              recover(new ParseException(token, new int[0][0], new String[] {"Lexical error: " + tme.toString()}));
         }
         catch (Exception e)
         {
@@ -2886,11 +2887,6 @@ public class VelocityParser/*@bgen(jjtree)*/implements VelocityParserTreeConstan
     finally { jj_save(10, xla); }
   }
 
-  private boolean jj_3R_48() {
-    if (jj_3R_66()) return true;
-    return false;
-  }
-
   private boolean jj_3R_47() {
     if (jj_3R_65()) return true;
     return false;
@@ -3381,6 +3377,11 @@ public class VelocityParser/*@bgen(jjtree)*/implements VelocityParserTreeConstan
 
   private boolean jj_3R_49() {
     if (jj_3R_67()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_48() {
+    if (jj_3R_66()) return true;
     return false;
   }
 

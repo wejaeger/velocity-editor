@@ -74,7 +74,7 @@ public class VTLBracesMatcher implements BracesMatcher, BracesMatcherFactory
             break;
 
          case VelocityParserConstants.END:
-            aiOrigins       = new int[] {ts.offset(), ts.offset() + token.length()};
+            aiOrigins       = new int[] {ts.offset(), ts.offset() + token.text().toString().trim().length()};
             m_iOriginOffset = aiOrigins[0];
             m_fBackward     = true;
             break;

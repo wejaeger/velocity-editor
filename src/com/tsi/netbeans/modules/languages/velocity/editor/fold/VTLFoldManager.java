@@ -12,8 +12,15 @@ package com.tsi.netbeans.modules.languages.velocity.editor.fold;
 import com.tsi.netbeans.modules.languages.velocity.parser.VTLParser;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.event.DocumentEvent;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.StyledDocument;
 import org.netbeans.api.editor.fold.Fold;
+import org.netbeans.api.editor.fold.FoldHierarchyEvent;
+import org.netbeans.api.editor.fold.FoldHierarchyListener;
+import org.netbeans.api.editor.fold.FoldStateChange;
 import org.netbeans.spi.editor.fold.FoldHierarchyTransaction;
 import org.netbeans.spi.editor.fold.FoldManager;
 import org.netbeans.spi.editor.fold.FoldOperation;
@@ -24,7 +31,7 @@ import org.openide.loaders.DataObject;
  *
  * @author <a href="mailto:werner.jaeger@t-systems.com">Werner Jaeger</a>
  */
-public class VTLFoldManager implements FoldManager
+public class VTLFoldManager implements FoldManager, FoldHierarchyListener
 {
    private FoldOperation          m_Operation;
    private VTLFoldAnalyser        m_Analyser;
@@ -41,6 +48,7 @@ public class VTLFoldManager implements FoldManager
    public void init(final FoldOperation operation)
    {
       m_Operation = operation;
+      m_Operation.getHierarchy().addFoldHierarchyListener(this);
    }
 
    public void initFolds(final FoldHierarchyTransaction transaction)
@@ -88,5 +96,38 @@ public class VTLFoldManager implements FoldManager
       m_CurrentFolds = null;
       m_Analyser     = null;
       m_File         = null;
+   }
+
+   public void foldHierarchyChanged(final FoldHierarchyEvent evt)
+   {
+      final int            iChangeCount = evt.getFoldStateChangeCount();
+      final StyledDocument document     = (StyledDocument)m_Operation.getHierarchy().getComponent().getDocument();
+
+      for (int i = 0; i < iChangeCount; i++)
+      {
+         final FoldStateChange change = evt.getFoldStateChange(i);
+
+         if (change.isStartOffsetChanged() || change.isEndOffsetChanged())
+         {
+            try
+            {
+               final Fold        newFold   = change.getFold();
+               final int         iOldStart = change.isStartOffsetChanged() ? change.getOriginalStartOffset() : newFold.getStartOffset();
+               final int         iOldEnd   = change.isEndOffsetChanged() ? change.getOriginalEndOffset() : newFold.getEndOffset();
+               final VTLFoldInfo oldInfo   = new VTLFoldInfo(document, iOldStart, iOldEnd, false);
+               final Fold        oldFold   = m_CurrentFolds.get(oldInfo);
+               if (oldFold != null)
+               {
+                  m_CurrentFolds.remove(oldInfo);
+                  final VTLFoldInfo newInfo = new VTLFoldInfo(document, newFold.getStartOffset(), newFold.getEndOffset(), false);
+                  m_CurrentFolds.put(newInfo, newFold);
+               }
+            }
+            catch (BadLocationException ble)
+            {
+               Logger.getLogger(VTLFoldManager.class.getName()).log(Level.WARNING, null, ble);
+            }
+         }
+      }
    }
 }
