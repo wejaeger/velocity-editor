@@ -46,6 +46,11 @@ class VTLFoldAnalyser extends VelocityAnalyser
 
    /**
     * Creates new {@code VTLFoldAnalyser}.
+    *
+    * @param operation a reference to the fold operation this analyser acts on.
+    *        must not be {@code null}.
+    * @param currentFolds a refference to a map of currently added folds.
+    *        Must not be {@code null}.
     */
    VTLFoldAnalyser(final FoldOperation operation, final Map<VTLFoldInfo, Fold> currentFolds)
    {
@@ -54,32 +59,42 @@ class VTLFoldAnalyser extends VelocityAnalyser
       m_Document     = (StyledDocument)m_Operation.getHierarchy().getComponent().getDocument();
    }
 
-   @Override
-   public Object visit(final ASTMacroStatement node, final Object oData)
+   /**
+    * {@inheritDoc}
+    */
+   @Override public Object visit(final ASTMacroStatement node, final Object oData)
    {
       return(visitImpl(node, oData));
    }
 
-   @Override
-   public Object visit(final ASTForEachStatement node, final Object oData)
+   /**
+    * {@inheritDoc}
+    */
+   @Override public Object visit(final ASTForEachStatement node, final Object oData)
    {
       return(visitImpl(node, oData));
    }
 
-   @Override
-   public Object visit(final ASTIfStatement node, final Object oData)
+   /**
+    * {@inheritDoc}
+    */
+   @Override public Object visit(final ASTIfStatement node, final Object oData)
    {
       return(visitImpl(node, oData));
    }
 
-   @Override
-   public Object visit(final ASTElseIfStatement node, final Object oData)
+   /**
+    * {@inheritDoc}
+    */
+   @Override public Object visit(final ASTElseIfStatement node, final Object oData)
    {
       return(visitImpl(node, oData));
    }
 
-   @Override
-   public Object visit(final ASTElseStatement node, final Object oData)
+   /**
+    * {@inheritDoc}
+    */
+   @Override public Object visit(final ASTElseStatement node, final Object oData)
    {
       return(visitImpl(node, oData));
    }
@@ -117,6 +132,9 @@ class VTLFoldAnalyser extends VelocityAnalyser
       return(node.childrenAccept(this, oData));
    }
 
+   /**
+    * {@inheritDoc}
+    */
    public void openTransaction()
    {
       if (m_Transaction == null)
@@ -126,6 +144,9 @@ class VTLFoldAnalyser extends VelocityAnalyser
          ((VTLFoldInfo)m_Operation.getExtraInfo(fold)).setState(VTLFoldInfo.State.UNTOUCHED);
    }
 
+   /**
+    * {@inheritDoc}
+    */
    public void commitTransaction()
    {
       final Set<VTLFoldInfo> untouched = new HashSet<VTLFoldInfo>();
@@ -136,7 +157,7 @@ class VTLFoldAnalyser extends VelocityAnalyser
          if (info.getState() == VTLFoldInfo.State.UNTOUCHED)
          {
             m_Operation.removeFromHierarchy(fold, m_Transaction);
-           untouched.add(info);
+            untouched.add(info);
          }
       }
 

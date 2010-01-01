@@ -25,8 +25,8 @@
    <!-- =================================================================== -->
    <target name="qa" depends="compile" description="Makes some test to ensure code conforms to our design- and programing guidlines">
      <taskdef classname="com.puppycrawl.tools.checkstyle.CheckStyleTask" classpath="../common/qa/checkstyle-all.jar;../common/qa/simian.jar" name="checkstyle"/>
-     <checkstyle config="../common/qa/tsiChecks.xml" classpath="build/classes">
-         <fileset dir="${basedir}" includes="src/com/tsi/netbeans/modules/languages/velocity/**/*.java" excludes="src/com/tsi/netbeans/modules/languages/velocity/jcclexer/**/"/>
+     <checkstyle config="../common/qa/tsiChecks.xml" classpath="build/classes;build/public-package-jars/org-netbeans-modules-parsing-api.jar;build/public-package-jars/org-openide-loaders.jar">
+         <fileset dir="${basedir}" includes="src/com/tsi/netbeans/modules/languages/velocity/**/*.java" excludes="src/com/tsi/netbeans/modules/languages/velocity/jcclexer/**/,src/com/tsi/netbeans/modules/languages/velocity/lexer/VelocityCharStream.java"/>
          <property key="checkstyle.StrictDuplicateCode.lines" value="20"/>
          <property key="checkstyle.filter.file" value="${project.root}/../common/qa/suppressions.xml"/>
       </checkstyle>

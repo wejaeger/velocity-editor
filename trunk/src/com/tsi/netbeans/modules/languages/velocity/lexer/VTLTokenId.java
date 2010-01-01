@@ -13,6 +13,7 @@ import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.TokenId;
 
 /**
+ * Implementation of a VTL token-type.
  *
  * @author <a href="mailto:werner.jaeger@t-systems.com">Werner Jaeger</a>
  */
@@ -26,6 +27,13 @@ public class VTLTokenId implements TokenId
 
    /**
     * Creates new {@code VTLTokenId}.
+    *
+    * @param strName the name of this token type.
+    * @param strPrimaryCategory the name of primary token category into which
+    *        this token type belongs.
+    * @param iId the integer identification of this token type as defined in
+    *        {@link com.tsi.netbeans.modules.languages.velocity.jcclexer.VelocityParserConstants
+    *        VelocityParserConstants}.
     */
    public VTLTokenId(final String strName, final String strPrimaryCategory, final int iId)
    {
@@ -34,25 +42,37 @@ public class VTLTokenId implements TokenId
       m_iId                = iId;
    }
 
-    public static final Language<VTLTokenId> getLanguage()
-    {
-        return(LANGUAGE);
-    }
+   /**
+    * Retrieves the language for this token type.
+    *
+    * @return a reference to the language of this token type.
+    *         Never {@code null}.
+    */
+   public static final Language<VTLTokenId> getLanguage()
+   {
+      return(LANGUAGE);
+   }
 
-   @Override
-   public String name()
+   /**
+    * {@inheritDoc}
+    */
+   @Override public String name()
    {
       return(m_strName);
    }
 
-   @Override
-   public String primaryCategory()
+   /**
+    * {@inheritDoc}
+    */
+   @Override public String primaryCategory()
    {
       return(m_strPrimaryCategory);
    }
 
-   @Override
-   public int ordinal()
+   /**
+    * {@inheritDoc}
+    */
+   @Override public int ordinal()
    {
       return(m_iId);
    }

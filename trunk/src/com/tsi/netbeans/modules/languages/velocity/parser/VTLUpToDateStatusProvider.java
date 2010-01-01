@@ -16,12 +16,14 @@ import org.netbeans.spi.editor.errorstripe.UpToDateStatus;
 import org.netbeans.spi.editor.errorstripe.UpToDateStatusProvider;
 
 /**
+ * Provides information whether the current annotations attached to the
+ * documents are up-to-date.
  *
  * @author <a href="mailto:werner.jaeger@t-systems.com">Werner Jaeger</a>
  */
 class VTLUpToDateStatusProvider extends UpToDateStatusProvider
 {
-   private static final Map<Document, VTLUpToDateStatusProvider> m_Cache = new WeakHashMap<Document, VTLUpToDateStatusProvider>();
+   private static final Map<Document, VTLUpToDateStatusProvider> CACHE = new WeakHashMap<Document, VTLUpToDateStatusProvider>();
 
    private final Document m_Document;
 
@@ -29,32 +31,54 @@ class VTLUpToDateStatusProvider extends UpToDateStatusProvider
 
    /**
     * Creates new {@code VTLUpToDateStatusProvider}.
+    *
+    * @param document a reference to the document thats status to report.
+    *        Must not be {@code null}.
     */
    private VTLUpToDateStatusProvider(final Document document)
    {
       m_Document = document;
       m_Status   = UpToDateStatus.UP_TO_DATE_DIRTY;
-      m_Cache.put(document, this);
+      CACHE.put(document, this);
    }
 
+   /**
+    * Factory methode to create new providers for a given document.
+    *
+    * @param document the document to create a provider for.
+    *        Must not be {@code null}.
+    *
+    * @return a reference to a provider either retrieved from a cache or newly
+    *         created. Never {@code null}.
+    */
    static VTLUpToDateStatusProvider forDocument(final Document document)
    {
       final VTLUpToDateStatusProvider localUpToDateStatusProvider;
-      final VTLUpToDateStatusProvider localUpToDateStatusProvider1 = m_Cache.get(document);
+      final VTLUpToDateStatusProvider localUpToDateStatusProvider1 = CACHE.get(document);
       if (localUpToDateStatusProvider1 == null)
          localUpToDateStatusProvider = new VTLUpToDateStatusProvider(document);
       else
          localUpToDateStatusProvider = localUpToDateStatusProvider1;
-      
+
       return(localUpToDateStatusProvider);
    }
 
-   @Override
-   public UpToDateStatus getUpToDate()
+   /**
+    * {@inheritDoc}
+    */
+   @Override public UpToDateStatus getUpToDate()
    {
       return(m_Status);
    }
 
+   /**
+    * Switch current Up-to-date status to processing.
+    *
+    * <p>
+    *   Up-to-date status saying that the list of marks is not up-to-date,
+    *   but a up-to-date list of marks is currently being found.
+    * </p>
+    */
    void setProcessingStatus()
    {
       final UpToDateStatus oldStatus = m_Status;
@@ -62,6 +86,14 @@ class VTLUpToDateStatusProvider extends UpToDateStatusProvider
       firePropertyChange(PROP_UP_TO_DATE, oldStatus, m_Status);
    }
 
+   /**
+    * Switch current Up-to-date status to dirty.
+    *
+    * <p>
+    *   Up-to-date status saying that the list of marks is not up-to-date,
+    *   and nothing is currently done in order to get the up-to-date list.
+    * </p>
+    */
    void setDirtyStatus()
    {
       final UpToDateStatus oldStatus = m_Status;
@@ -69,6 +101,13 @@ class VTLUpToDateStatusProvider extends UpToDateStatusProvider
       firePropertyChange(PROP_UP_TO_DATE, oldStatus, m_Status);
    }
 
+   /**
+    * Switch current Up-to-date status to ok.
+    *
+    * <p>
+    *   Up-to-date status saying everything is up-to-date.
+    * </p>
+    */
    void setOkStatus()
    {
       final UpToDateStatus oldStatus = m_Status;

@@ -82,6 +82,9 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.TreeSet;
 
+/**
+ * A velocity template language (VTL) paser.
+ */
 public class VelocityParser
 {
     /**
@@ -97,7 +100,7 @@ public class VelocityParser
     /**
      *  This Hashtable contains a list of all of the dynamic m_Directives.
      */
-    private Hashtable m_Directives = new Hashtable(0);
+    private Hashtable<String, Directive> m_Directives = new Hashtable<String, Directive>(0);
 
     private List<ParseException> m_SyntaxErrors;
 
@@ -359,7 +362,7 @@ TOKEN_MGR_DECLS:
     private int lparen = 0;
     private int rparen = 0;
 
-    Stack stateStack = new Stack();
+    Stack<Hashtable<String, Integer>> stateStack = new Stack<Hashtable<String, Integer>>();
     public boolean debugPrint = false;
 
     private boolean inReference;
@@ -377,11 +380,11 @@ TOKEN_MGR_DECLS:
      */
     public boolean stateStackPop()
     {
-        Hashtable h;
+        Hashtable<String, Integer> h;
 
         try
         {
-            h = (Hashtable)stateStack.pop();
+            h = stateStack.pop();
         }
         catch (EmptyStackException e)
         {
@@ -393,13 +396,13 @@ TOKEN_MGR_DECLS:
         if (debugPrint)
             System.out.println(
                 " stack pop (" + stateStack.size() + ") : lparen=" +
-                    ((Integer)h.get("lparen")).intValue() +
-                        " newstate=" + ((Integer)h.get("lexstate")).intValue());
+                    h.get("lparen").intValue() +
+                        " newstate=" + h.get("lexstate").intValue());
 
-        lparen = ((Integer)h.get("lparen")).intValue();
-        rparen = ((Integer)h.get("rparen")).intValue();
+        lparen = h.get("lparen").intValue();
+        rparen = h.get("rparen").intValue();
 
-        SwitchTo(((Integer)h.get("lexstate")).intValue());
+        SwitchTo(h.get("lexstate").intValue());
 
         return(true);
     }
@@ -414,7 +417,7 @@ TOKEN_MGR_DECLS:
         if (debugPrint)
             System.out.println(" (" + stateStack.size() + ") pushing cur state : " + curLexState);
 
-        final Hashtable h = new Hashtable();
+        final Hashtable<String, Integer> h = new Hashtable<String, Integer>();
 
         h.put("lexstate", new Integer( curLexState ) );
         h.put("lparen", new Integer( lparen ));
@@ -422,16 +425,15 @@ TOKEN_MGR_DECLS:
 
         lparen = 0;
 
-        stateStack.push( h );
+        stateStack.push(h);
 
-        return true;
+        return(true);
     }
 
     /**
      *  Clears all state variables, resets to
      *  start values, clears stateStack.  Call
      *  before parsing.
-     *  @return void
      */
     public void clearStateVars()
     {
@@ -1464,7 +1466,7 @@ SimpleNode Directive() :
             directiveName = t.image.substring(1);
         }
 
-        d = (Directive)m_Directives.get(directiveName);
+        d = m_Directives.get(directiveName);
 
         if ( d == null)
         {

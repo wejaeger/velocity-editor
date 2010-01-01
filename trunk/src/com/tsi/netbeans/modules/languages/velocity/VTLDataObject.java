@@ -21,24 +21,43 @@ import org.openide.nodes.Children;
 import org.openide.util.Lookup;
 import org.openide.text.DataEditorSupport;
 
+/**
+ * Provides support for handling of data objects with multiple files.
+ *
+ * @author <a href="mailto:werner.jaeger@t-systems.com">Werner Jaeger</a>
+ */
 public class VTLDataObject extends MultiDataObject
 {
-   public VTLDataObject(final FileObject pf, final MultiFileLoader loader) throws DataObjectExistsException, IOException
+   /**
+    * Creates new {@code VTLDataObject}.
+    *
+    * @param fo the primary file object.
+    * @param loader loader of this data object.
+    *
+    * @throws DataObjectExistsException if there is already a data object for
+    *         this primary file
+    * @throws IOException in case of an IO error.
+    */
+   public VTLDataObject(final FileObject fo, final MultiFileLoader loader) throws DataObjectExistsException, IOException
    {
-      super(pf, loader);
+      super(fo, loader);
 
       final CookieSet cookies = getCookieSet();
       cookies.add((Node.Cookie)DataEditorSupport.create(this, getPrimaryEntry(), cookies));
    }
 
-   @Override
-   protected Node createNodeDelegate()
+   /**
+    * {@inheritDoc}
+    */
+   @Override protected Node createNodeDelegate()
    {
       return(new DataNode(this, Children.LEAF, getLookup()));
    }
 
-   @Override
-   public Lookup getLookup()
+   /**
+    * {@inheritDoc}
+    */
+   @Override public Lookup getLookup()
    {
       return(getCookieSet().getLookup());
    }

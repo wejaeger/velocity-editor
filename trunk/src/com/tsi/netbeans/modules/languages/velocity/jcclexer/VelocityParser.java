@@ -15,6 +15,9 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.TreeSet;
 
+/**
+ * A velocity template language (VTL) paser.
+ */
 public class VelocityParser/*@bgen(jjtree)*/implements VelocityParserTreeConstants, VelocityParserConstants {/*@bgen(jjtree)*/
   protected JJTVelocityParserState jjtree = new JJTVelocityParserState();/**
      *  This set contains a list of all declared macro names.
@@ -29,7 +32,7 @@ public class VelocityParser/*@bgen(jjtree)*/implements VelocityParserTreeConstan
     /**
      *  This Hashtable contains a list of all of the dynamic m_Directives.
      */
-    private Hashtable m_Directives = new Hashtable(0);
+    private Hashtable<String, Directive> m_Directives = new Hashtable<String, Directive>(0);
 
     private List<ParseException> m_SyntaxErrors;
 
@@ -769,7 +772,7 @@ public class VelocityParser/*@bgen(jjtree)*/implements VelocityParserTreeConstan
             directiveName = t.image.substring(1);
         }
 
-        d = (Directive)m_Directives.get(directiveName);
+        d = m_Directives.get(directiveName);
 
         if ( d == null)
         {
@@ -2887,16 +2890,6 @@ public class VelocityParser/*@bgen(jjtree)*/implements VelocityParserTreeConstan
     finally { jj_save(10, xla); }
   }
 
-  private boolean jj_3R_47() {
-    if (jj_3R_65()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_46() {
-    if (jj_3R_39()) return true;
-    return false;
-  }
-
   private boolean jj_3_3() {
     if (jj_scan_token(LBRACKET)) return true;
     Token xsp;
@@ -3382,6 +3375,16 @@ public class VelocityParser/*@bgen(jjtree)*/implements VelocityParserTreeConstan
 
   private boolean jj_3R_48() {
     if (jj_3R_66()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_47() {
+    if (jj_3R_65()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_46() {
+    if (jj_3R_39()) return true;
     return false;
   }
 

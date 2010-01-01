@@ -16,32 +16,37 @@ import org.netbeans.spi.lexer.Lexer;
 import org.netbeans.spi.lexer.LexerRestartInfo;
 
 /**
+ * A lexer for the VTL language.
  *
  * @author <a href="mailto:werner.jaeger@t-systems.com">Werner Jaeger</a>
  */
 class VTLLexer implements Lexer<VTLTokenId>
 {
-    private final LexerRestartInfo<VTLTokenId> m_Info;
-    private final VelocityParserTokenManager   m_VelocityParserTokenManager;
+   private final LexerRestartInfo<VTLTokenId> m_Info;
+   private final VelocityParserTokenManager   m_VelocityParserTokenManager;
 
-    private Integer m_CurrLexState;
+   private Integer m_CurrLexState;
 
    /**
     * Creates new {@code VTLLexer}.
+    *
+    * @param info a reference to the lexer info object.
+    *        Must not be {@code null}.
     */
    VTLLexer(final LexerRestartInfo<VTLTokenId> info)
    {
-        m_Info                       = info;
-        m_VelocityParserTokenManager = new VelocityParserTokenManager(new VelocityCharStream(info.input()));
-        m_CurrLexState               = null;
+      m_Info                       = info;
+      m_VelocityParserTokenManager = new VelocityParserTokenManager(new VelocityCharStream(info.input()));
+      m_CurrLexState               = null;
    }
 
-   @Override
-   public Token<VTLTokenId> nextToken()
+   /**
+    * {@inheritDoc}
+    */
+   @Override public Token<VTLTokenId> nextToken()
    {
       final Token<VTLTokenId> returnToken;
 
-      
       com.tsi.netbeans.modules.languages.velocity.jcclexer.Token token = m_VelocityParserTokenManager.getNextToken();
 
       if (token.kind == VelocityParserConstants.SINGLE_LINE_COMMENT_START || token.kind == VelocityParserConstants.SINGLE_LINE_COMMENT)
@@ -66,7 +71,7 @@ class VTLLexer implements Lexer<VTLTokenId>
          m_CurrLexState = Integer.valueOf(2);
       }
       else
-         m_CurrLexState =null;
+         m_CurrLexState = null;
 
       if (m_Info.input().readLength() < 1)
          returnToken = null;
@@ -76,14 +81,18 @@ class VTLLexer implements Lexer<VTLTokenId>
       return(returnToken);
    }
 
-   @Override
-   public Object state()
+   /**
+    * {@inheritDoc}
+    */
+   @Override public Object state()
    {
       return(null);
    }
 
-   @Override
-   public void release()
+   /**
+    * {@inheritDoc}
+    */
+   @Override public void release()
    {
    }
 }

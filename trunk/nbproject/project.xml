@@ -144,7 +144,16 @@
                     </run-dependency>
                 </dependency>
             </module-dependencies>
-            <public-packages/>
+            <public-packages>
+                <package>com.tsi.netbeans.modules.languages.velocity</package>
+                <package>com.tsi.netbeans.modules.languages.velocity.editor</package>
+                <package>com.tsi.netbeans.modules.languages.velocity.editor.bracesmatching</package>
+                <package>com.tsi.netbeans.modules.languages.velocity.editor.fold</package>
+                <package>com.tsi.netbeans.modules.languages.velocity.jcclexer</package>
+                <package>com.tsi.netbeans.modules.languages.velocity.jcclexer.node</package>
+                <package>com.tsi.netbeans.modules.languages.velocity.lexer</package>
+                <package>com.tsi.netbeans.modules.languages.velocity.parser</package>
+            </public-packages>
         </data>
     </configuration>
 </project>

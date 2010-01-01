@@ -28,6 +28,8 @@ import org.openide.text.NbDocument;
 import org.openide.util.Exceptions;
 
 /**
+ * Scheduler task that process result of parsing to implement syntax
+ * highlighting.
  *
  * @author <a href="mailto:werner.jaeger@t-systems.com">Werner Jaeger</a>
  */
@@ -40,8 +42,10 @@ public class VTLSyntaxErrorsHighlightingTask extends ParserResultTask
    {
    }
 
-   @Override
-   public void run(final Result result, final SchedulerEvent event)
+   /**
+    * {@inheritDoc}
+    */
+   @Override public void run(final Result result, final SchedulerEvent event)
    {
       try
       {
@@ -50,7 +54,7 @@ public class VTLSyntaxErrorsHighlightingTask extends ParserResultTask
          final Document               document     = result.getSnapshot().getSource().getDocument(false);
          final List<ErrorDescription> errors       = new ArrayList<ErrorDescription>();
 
-         VTLUpToDateStatusProvider sp = VTLUpToDateStatusProvider.forDocument(document);
+         final VTLUpToDateStatusProvider sp = VTLUpToDateStatusProvider.forDocument(document);
 
          if (sp != null)
             sp.setProcessingStatus();
@@ -61,8 +65,7 @@ public class VTLSyntaxErrorsHighlightingTask extends ParserResultTask
             final int   iStart = NbDocument.findLineOffset((StyledDocument)document, Math.max(token.beginLine - 1, 0)) + Math.max(token.beginColumn - 1, 0);
             final int   iEnd   = NbDocument.findLineOffset((StyledDocument)document, Math.max(token.endLine - 1, 0)) + token.endColumn;
 
-            final ErrorDescription errorDescription = ErrorDescriptionFactory.createErrorDescription
-            (
+            final ErrorDescription errorDescription = ErrorDescriptionFactory.createErrorDescription (
                Severity.ERROR,
                syntaxError.getMessage(),
                document,
@@ -87,20 +90,26 @@ public class VTLSyntaxErrorsHighlightingTask extends ParserResultTask
       }
    }
 
-   @Override
-   public int getPriority()
+   /**
+    * {@inheritDoc}
+    */
+   @Override public int getPriority()
    {
       return(100);
    }
 
-   @Override
-   public Class<? extends Scheduler> getSchedulerClass()
+   /**
+    * {@inheritDoc}
+    */
+   @Override public Class<? extends Scheduler> getSchedulerClass()
    {
       return(Scheduler.EDITOR_SENSITIVE_TASK_SCHEDULER);
    }
 
-   @Override
-   public void cancel()
+   /**
+    * {@inheritDoc}
+    */
+   @Override public void cancel()
    {
    }
 }

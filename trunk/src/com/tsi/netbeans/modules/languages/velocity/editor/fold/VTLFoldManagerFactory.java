@@ -13,6 +13,7 @@ import org.netbeans.spi.editor.fold.FoldManager;
 import org.netbeans.spi.editor.fold.FoldManagerFactory;
 
 /**
+ * Creates a new {@link VTLFoldManager} object.
  *
  * @author <a href="mailto:werner.jaeger@t-systems.com">Werner Jaeger</a>
  */
@@ -25,6 +26,9 @@ public class VTLFoldManagerFactory implements FoldManagerFactory
    {
    }
 
+   /**
+    * {@inheritDoc}
+    */
    public FoldManager createFoldManager()
    {
       return(new VTLFoldManager());

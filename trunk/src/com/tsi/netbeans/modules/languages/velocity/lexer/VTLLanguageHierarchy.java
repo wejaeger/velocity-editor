@@ -21,6 +21,7 @@ import org.netbeans.spi.lexer.Lexer;
 import org.netbeans.spi.lexer.LexerRestartInfo;
 
 /**
+ * Definition of VTL language and its lexer.
  *
  * @author <a href="mailto:werner.jaeger@t-systems.com">Werner Jaeger</a>
  */
@@ -39,77 +40,77 @@ public class VTLLanguageHierarchy extends LanguageHierarchy<VTLTokenId>
    private static void init()
    {
       m_Tokens = Arrays.<VTLTokenId>asList(new VTLTokenId[]
-              {
-                  new VTLTokenId ("EOF", "whitespace", EOF),
-                  new VTLTokenId ("LBRACKET", "separator", LBRACKET),
-                  new VTLTokenId ("RBRACKET", "separator", RBRACKET),
-                  new VTLTokenId ("COMMA", "separator", COMMA),
-                  new VTLTokenId ("DOUBLEDOT", "separator", DOUBLEDOT),
-                  new VTLTokenId ("COLON", "separator", COLON),
-                  new VTLTokenId ("LEFT_CURLEY", "separator", LEFT_CURLEY),
-                  new VTLTokenId ("RIGHT_CURLEY", "separator", RIGHT_CURLEY),
-                  new VTLTokenId ("LPAREN", "separator", LPAREN),
-                  new VTLTokenId ("RPAREN", "separator", RPAREN),
-                  new VTLTokenId ("WORD_IN", "keyword", WORD_IN),
-                  new VTLTokenId ("REFMOD2_RPAREN", "separator", REFMOD2_RPAREN),
-                  new VTLTokenId ("ESCAPE_DIRECTIVE", "", ESCAPE_DIRECTIVE),
-                  new VTLTokenId ("SET_DIRECTIVE", "directive", SET_DIRECTIVE),
-                  new VTLTokenId ("DOLLAR", "separator", DOLLAR),
-                  new VTLTokenId ("DOLLARBANG", "separator", DOLLARBANG),
-                  new VTLTokenId ("HASH", "separator", HASH),
-                  new VTLTokenId ("SINGLE_LINE_COMMENT_START", "comment", SINGLE_LINE_COMMENT_START),
-                  new VTLTokenId ("DOUBLE_ESCAPE", "", DOUBLE_ESCAPE),
-                  new VTLTokenId ("ESCAPE", "", ESCAPE),
-                  new VTLTokenId ("TEXT", "", TEXT),
-                  new VTLTokenId ("SINGLE_LINE_COMMENT", "comment", SINGLE_LINE_COMMENT),
-                  new VTLTokenId ("FORMAL_COMMENT", "comment", FORMAL_COMMENT),
-                  new VTLTokenId ("MULTI_LINE_COMMENT", "comment", MULTI_LINE_COMMENT),
-                  new VTLTokenId ("STRING_LITERAL", "string", STRING_LITERAL),
-                  new VTLTokenId ("TRUE", "boolean", TRUE),
-                  new VTLTokenId ("FALSE", "boolean", FALSE),
-                  new VTLTokenId ("NEWLINE", "", NEWLINE),
-                  new VTLTokenId ("MINUS", "operator", MINUS),
-                  new VTLTokenId ("PLUS", "operator", PLUS),
-                  new VTLTokenId ("MULTIPLY", "operator", MULTIPLY),
-                  new VTLTokenId ("DIVIDE", "operator", DIVIDE),
-                  new VTLTokenId ("MODULUS", "operator", MODULUS),
-                  new VTLTokenId ("LOGICAL_AND", "operator", LOGICAL_AND),
-                  new VTLTokenId ("LOGICAL_OR", "operator", LOGICAL_OR),
-                  new VTLTokenId ("LOGICAL_LT", "operator", LOGICAL_LT),
-                  new VTLTokenId ("LOGICAL_LE", "operator", LOGICAL_LE),
-                  new VTLTokenId ("LOGICAL_GT", "operator", LOGICAL_GT),
-                  new VTLTokenId ("LOGICAL_GE", "operator", LOGICAL_GE),
-                  new VTLTokenId ("LOGICAL_EQUALS", "operator", LOGICAL_EQUALS),
-                  new VTLTokenId ("LOGICAL_NOT_EQUALS", "operator", LOGICAL_NOT_EQUALS),
-                  new VTLTokenId ("LOGICAL_NOT", "operator", LOGICAL_NOT),
-                  new VTLTokenId ("EQUALS", "operator", EQUALS),
-                  new VTLTokenId ("END", "directive", END),
-                  new VTLTokenId ("FOREACH_DIRECTIVE", "directive", FOREACH_DIRECTIVE),
-                  new VTLTokenId ("MACRO_DIRECTIVE", "directive", MACRO_DIRECTIVE),
-                  new VTLTokenId ("MACROCALL_DIRECTIVE", "directive", MACROCALL_DIRECTIVE),
-                  new VTLTokenId ("INCLUDE_DIRECTIVE", "directive", INCLUDE_DIRECTIVE),
-                  new VTLTokenId ("IF_DIRECTIVE", "directive", IF_DIRECTIVE),
-                  new VTLTokenId ("ELSEIF_DIRECTIVE", "directive", ELSEIF_DIRECTIVE),
-                  new VTLTokenId ("ELSE_DIRECTIVE", "directive", ELSE_DIRECTIVE),
-                  new VTLTokenId ("STOP_DIRECTIVE", "directive", STOP_DIRECTIVE),
-                  new VTLTokenId ("DIGIT", "number", DIGIT),
-                  new VTLTokenId ("INTEGER_LITERAL", "number", INTEGER_LITERAL),
-                  new VTLTokenId ("FLOATING_POINT_LITERAL", "number", FLOATING_POINT_LITERAL),
-                  new VTLTokenId ("EXPONENT", "operator", EXPONENT),
-                  new VTLTokenId ("LETTER", "", LETTER),
-                  new VTLTokenId ("DIRECTIVE_CHAR", "", DIRECTIVE_CHAR),
-                  new VTLTokenId ("WORD", "", WORD),
-                  new VTLTokenId ("BRACKETED_WORD", "", BRACKETED_WORD),
-                  new VTLTokenId ("ALPHA_CHAR", "", ALPHA_CHAR),
-                  new VTLTokenId ("ALPHANUM_CHAR", "", ALPHANUM_CHAR),
-                  new VTLTokenId ("IDENTIFIER_CHAR", "", IDENTIFIER_CHAR),
-                  new VTLTokenId ("IDENTIFIER", "identifier", IDENTIFIER),
-                  new VTLTokenId ("DOT", "separator", DOT),
-                  new VTLTokenId ("LCURLY", "separator", LCURLY),
-                  new VTLTokenId ("RCURLY", "separator", RCURLY),
-                  new VTLTokenId ("REFERENCE_TERMINATOR", "separator", REFERENCE_TERMINATOR),
-                  new VTLTokenId ("DIRECTIVE_TERMINATOR", "separator", DIRECTIVE_TERMINATOR)
-              });
+      {
+         new VTLTokenId ("EOF", "whitespace", EOF),
+         new VTLTokenId ("LBRACKET", "separator", LBRACKET),
+         new VTLTokenId ("RBRACKET", "separator", RBRACKET),
+         new VTLTokenId ("COMMA", "separator", COMMA),
+         new VTLTokenId ("DOUBLEDOT", "separator", DOUBLEDOT),
+         new VTLTokenId ("COLON", "separator", COLON),
+         new VTLTokenId ("LEFT_CURLEY", "separator", LEFT_CURLEY),
+         new VTLTokenId ("RIGHT_CURLEY", "separator", RIGHT_CURLEY),
+         new VTLTokenId ("LPAREN", "separator", LPAREN),
+         new VTLTokenId ("RPAREN", "separator", RPAREN),
+         new VTLTokenId ("WORD_IN", "keyword", WORD_IN),
+         new VTLTokenId ("REFMOD2_RPAREN", "separator", REFMOD2_RPAREN),
+         new VTLTokenId ("ESCAPE_DIRECTIVE", "", ESCAPE_DIRECTIVE),
+         new VTLTokenId ("SET_DIRECTIVE", "directive", SET_DIRECTIVE),
+         new VTLTokenId ("DOLLAR", "separator", DOLLAR),
+         new VTLTokenId ("DOLLARBANG", "separator", DOLLARBANG),
+         new VTLTokenId ("HASH", "separator", HASH),
+         new VTLTokenId ("SINGLE_LINE_COMMENT_START", "comment", SINGLE_LINE_COMMENT_START),
+         new VTLTokenId ("DOUBLE_ESCAPE", "", DOUBLE_ESCAPE),
+         new VTLTokenId ("ESCAPE", "", ESCAPE),
+         new VTLTokenId ("TEXT", "", TEXT),
+         new VTLTokenId ("SINGLE_LINE_COMMENT", "comment", SINGLE_LINE_COMMENT),
+         new VTLTokenId ("FORMAL_COMMENT", "comment", FORMAL_COMMENT),
+         new VTLTokenId ("MULTI_LINE_COMMENT", "comment", MULTI_LINE_COMMENT),
+         new VTLTokenId ("STRING_LITERAL", "string", STRING_LITERAL),
+         new VTLTokenId ("TRUE", "boolean", TRUE),
+         new VTLTokenId ("FALSE", "boolean", FALSE),
+         new VTLTokenId ("NEWLINE", "", NEWLINE),
+         new VTLTokenId ("MINUS", "operator", MINUS),
+         new VTLTokenId ("PLUS", "operator", PLUS),
+         new VTLTokenId ("MULTIPLY", "operator", MULTIPLY),
+         new VTLTokenId ("DIVIDE", "operator", DIVIDE),
+         new VTLTokenId ("MODULUS", "operator", MODULUS),
+         new VTLTokenId ("LOGICAL_AND", "operator", LOGICAL_AND),
+         new VTLTokenId ("LOGICAL_OR", "operator", LOGICAL_OR),
+         new VTLTokenId ("LOGICAL_LT", "operator", LOGICAL_LT),
+         new VTLTokenId ("LOGICAL_LE", "operator", LOGICAL_LE),
+         new VTLTokenId ("LOGICAL_GT", "operator", LOGICAL_GT),
+         new VTLTokenId ("LOGICAL_GE", "operator", LOGICAL_GE),
+         new VTLTokenId ("LOGICAL_EQUALS", "operator", LOGICAL_EQUALS),
+         new VTLTokenId ("LOGICAL_NOT_EQUALS", "operator", LOGICAL_NOT_EQUALS),
+         new VTLTokenId ("LOGICAL_NOT", "operator", LOGICAL_NOT),
+         new VTLTokenId ("EQUALS", "operator", EQUALS),
+         new VTLTokenId ("END", "directive", END),
+         new VTLTokenId ("FOREACH_DIRECTIVE", "directive", FOREACH_DIRECTIVE),
+         new VTLTokenId ("MACRO_DIRECTIVE", "directive", MACRO_DIRECTIVE),
+         new VTLTokenId ("MACROCALL_DIRECTIVE", "directive", MACROCALL_DIRECTIVE),
+         new VTLTokenId ("INCLUDE_DIRECTIVE", "directive", INCLUDE_DIRECTIVE),
+         new VTLTokenId ("IF_DIRECTIVE", "directive", IF_DIRECTIVE),
+         new VTLTokenId ("ELSEIF_DIRECTIVE", "directive", ELSEIF_DIRECTIVE),
+         new VTLTokenId ("ELSE_DIRECTIVE", "directive", ELSE_DIRECTIVE),
+         new VTLTokenId ("STOP_DIRECTIVE", "directive", STOP_DIRECTIVE),
+         new VTLTokenId ("DIGIT", "number", DIGIT),
+         new VTLTokenId ("INTEGER_LITERAL", "number", INTEGER_LITERAL),
+         new VTLTokenId ("FLOATING_POINT_LITERAL", "number", FLOATING_POINT_LITERAL),
+         new VTLTokenId ("EXPONENT", "operator", EXPONENT),
+         new VTLTokenId ("LETTER", "", LETTER),
+         new VTLTokenId ("DIRECTIVE_CHAR", "", DIRECTIVE_CHAR),
+         new VTLTokenId ("WORD", "", WORD),
+         new VTLTokenId ("BRACKETED_WORD", "", BRACKETED_WORD),
+         new VTLTokenId ("ALPHA_CHAR", "", ALPHA_CHAR),
+         new VTLTokenId ("ALPHANUM_CHAR", "", ALPHANUM_CHAR),
+         new VTLTokenId ("IDENTIFIER_CHAR", "", IDENTIFIER_CHAR),
+         new VTLTokenId ("IDENTIFIER", "identifier", IDENTIFIER),
+         new VTLTokenId ("DOT", "separator", DOT),
+         new VTLTokenId ("LCURLY", "separator", LCURLY),
+         new VTLTokenId ("RCURLY", "separator", RCURLY),
+         new VTLTokenId ("REFERENCE_TERMINATOR", "separator", REFERENCE_TERMINATOR),
+         new VTLTokenId ("DIRECTIVE_TERMINATOR", "separator", DIRECTIVE_TERMINATOR)
+      });
 
       m_IdToToken = new HashMap<Integer, VTLTokenId>();
 
@@ -117,6 +118,17 @@ public class VTLLanguageHierarchy extends LanguageHierarchy<VTLTokenId>
          m_IdToToken.put(token.ordinal(), token);
    }
 
+   /**
+    * Retrives a VTL token identifier object for the given token identifier as
+    * defined in {@link
+    * com.tsi.netbeans.modules.languages.velocity.jcclexer.VelocityParserConstants
+    * VelocityParserConstants}.
+    *
+    * @param iId the identifier to look for.
+    *
+    * @return a reference to a token identifier object or {@code null} in no
+    *         such object exists.
+    */
    static synchronized VTLTokenId getToken(final int iId)
    {
       if (m_IdToToken == null)
@@ -125,8 +137,10 @@ public class VTLLanguageHierarchy extends LanguageHierarchy<VTLTokenId>
       return(m_IdToToken.get(iId));
    }
 
-   @Override
-   protected Collection<VTLTokenId> createTokenIds()
+   /**
+    * {@inheritDoc}
+    */
+   @Override protected Collection<VTLTokenId> createTokenIds()
    {
       if (m_Tokens == null)
          init();
@@ -134,15 +148,19 @@ public class VTLLanguageHierarchy extends LanguageHierarchy<VTLTokenId>
       return(m_Tokens);
    }
 
-   @Override
-   protected Lexer<VTLTokenId> createLexer(final LexerRestartInfo<VTLTokenId> info)
+   /**
+    * {@inheritDoc}
+    */
+   @Override protected Lexer<VTLTokenId> createLexer(final LexerRestartInfo<VTLTokenId> info)
    {
       return(new VTLLexer(info));
    }
 
-   @Override
-   protected String mimeType()
+   /**
+    * {@inheritDoc}
+    */
+   @Override protected String mimeType()
    {
-       return("text/x-velocity");
+      return("text/x-velocity");
    }
 }
