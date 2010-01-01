@@ -16,6 +16,7 @@ import org.netbeans.modules.parsing.spi.SchedulerTask;
 import org.netbeans.modules.parsing.spi.TaskFactory;
 
 /**
+ * Creates a {@link VTLSyntaxErrorsHighlightingTask} for given source.
  *
  * @author <a href="mailto:werner.jaeger@t-systems.com">Werner Jaeger</a>
  */
@@ -28,8 +29,10 @@ public class VTLSyntaxErrorsHighlightingTaskFactory extends TaskFactory
    {
    }
 
-   @Override
-   public Collection<? extends SchedulerTask> create(final Snapshot snapshot)
+   /**
+    * {@inheritDoc}
+    */
+   @Override public Collection<? extends SchedulerTask> create(final Snapshot snapshot)
    {
       return(Collections.singleton(new VTLSyntaxErrorsHighlightingTask()));
    }

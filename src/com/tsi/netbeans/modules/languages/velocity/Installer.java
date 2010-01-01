@@ -14,13 +14,22 @@ import org.netbeans.editor.Settings;
 import org.openide.modules.ModuleInstall;
 
 /**
- * Manages a module's lifecycle. Remember that an installer is optional and
- * often not needed at all.
+ * Manages the VTL module's lifecycle.
+ *
+ * @author <a href="mailto:werner.jaeger@t-systems.com">Werner Jaeger</a>
  */
 public class Installer extends ModuleInstall
 {
-   @Override
-   public void restored()
+   /**
+    * Called when an already-installed module is restored (during startup).
+    *
+    * <p>
+    *    Registers {@link
+    *    com.tsi.netbeans.modules.languages.velocity.editor.VTLSettingsInitializer
+    *    VTLSettingsInitializer}.
+    * </p>
+    */
+   @Override public void restored()
    {
       Settings.addInitializer(new VTLSettingsInitializer());
    }

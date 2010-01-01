@@ -28,6 +28,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
 
 /**
+ * Maintains folds in the hierarchy for which it is constructed.
  *
  * @author <a href="mailto:werner.jaeger@t-systems.com">Werner Jaeger</a>
  */
@@ -45,12 +46,18 @@ public class VTLFoldManager implements FoldManager, FoldHierarchyListener
    {
    }
 
+   /**
+    * {@inheritDoc}
+    */
    public void init(final FoldOperation operation)
    {
       m_Operation = operation;
       m_Operation.getHierarchy().addFoldHierarchyListener(this);
    }
 
+   /**
+    * {@inheritDoc}
+    */
    public void initFolds(final FoldHierarchyTransaction transaction)
    {
 
@@ -66,30 +73,51 @@ public class VTLFoldManager implements FoldManager, FoldHierarchyListener
       }
    }
 
+   /**
+    * {@inheritDoc}
+    */
    public void insertUpdate(final DocumentEvent evt, final FoldHierarchyTransaction transaction)
    {
    }
 
+   /**
+    * {@inheritDoc}
+    */
    public void removeUpdate(final DocumentEvent evt, final FoldHierarchyTransaction transaction)
    {
    }
 
+   /**
+    * {@inheritDoc}
+    */
    public void changedUpdate(final DocumentEvent evt, final FoldHierarchyTransaction transaction)
    {
    }
 
+   /**
+    * {@inheritDoc}
+    */
    public void removeEmptyNotify(final Fold epmtyFold)
    {
    }
 
+   /**
+    * {@inheritDoc}
+    */
    public void removeDamagedNotify(final Fold damagedFold)
    {
    }
 
+   /**
+    * {@inheritDoc}
+    */
    public void expandNotify(final Fold expandedFold)
    {
    }
 
+   /**
+    * {@inheritDoc}
+    */
    public void release()
    {
       VTLParser.deregisterAnalyser(m_File, m_Analyser);
@@ -98,6 +126,9 @@ public class VTLFoldManager implements FoldManager, FoldHierarchyListener
       m_File         = null;
    }
 
+   /**
+    * {@inheritDoc}
+    */
    public void foldHierarchyChanged(final FoldHierarchyEvent evt)
    {
       final int            iChangeCount = evt.getFoldStateChangeCount();

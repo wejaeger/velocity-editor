@@ -29,12 +29,13 @@ import org.netbeans.modules.parsing.spi.SourceModificationEvent;
 import org.openide.filesystems.FileObject;
 
 /**
+ * Implementation of parser for VTL language.
  *
  * @author <a href="mailto:werner.jaeger@t-systems.com">Werner Jaeger</a>
  */
 public class VTLParser extends Parser
 {
-   private static final Map<FileObject, Set<VelocityAnalyser>> m_Analysers = new HashMap<FileObject, Set<VelocityAnalyser>>();
+   private static final Map<FileObject, Set<VelocityAnalyser>> ANALYSERS = new HashMap<FileObject, Set<VelocityAnalyser>>();
 
    private final VelocityParser m_Parser;
 
@@ -48,8 +49,10 @@ public class VTLParser extends Parser
       m_Parser = new VelocityParser();
    }
 
-   @Override
-   public void parse(final Snapshot snapshot, final Task task, final SourceModificationEvent sme) throws ParseException
+   /**
+    * {@inheritDoc}
+    */
+   @Override public void parse(final Snapshot snapshot, final Task task, final SourceModificationEvent sme) throws ParseException
    {
       m_Snapshot = snapshot;
 
@@ -62,7 +65,7 @@ public class VTLParser extends Parser
 
          if (sn != null)
          {
-            final Set<VelocityAnalyser> analysers = m_Analysers.get(sme.getModifiedSource().getFileObject());
+            final Set<VelocityAnalyser> analysers = ANALYSERS.get(sme.getModifiedSource().getFileObject());
 
             if (analysers != null)
             {
@@ -83,7 +86,7 @@ public class VTLParser extends Parser
 
    /**
     * Register an analyser that {@code visit} methode gets called each
-    * time the {@link #parse()} methode is done with creating an AST.
+    * time the {@link #parse} methode is done with creating an AST.
     *
     * @param fo the file object for which to register the given analyser.
     *           Must not be {@code null}.
@@ -91,18 +94,17 @@ public class VTLParser extends Parser
     *        called. If the passed analyser is already registered this methode
     *        returns silently. Must not be {@code null}.
     *
-    * @return
     * @throws ParseException
     */
    public static void registerAnalyser(final FileObject fo, final VelocityAnalyser analyser)
    {
-      final Set<VelocityAnalyser> analysers = m_Analysers.get(fo);
+      final Set<VelocityAnalyser> analysers = ANALYSERS.get(fo);
 
       if (analysers == null)
       {
          final Set<VelocityAnalyser> analyserSet = new HashSet<VelocityAnalyser>();
          analyserSet.add(analyser);
-         m_Analysers.put(fo, analyserSet);
+         ANALYSERS.put(fo, analyserSet);
       }
       else
          analysers.add(analyser);
@@ -117,35 +119,42 @@ public class VTLParser extends Parser
     *        analyser id not registered this methode returns silently.
     *        Must not be {@code null}.
     *
-    * @return
     * @throws ParseException
     */
    public static void deregisterAnalyser(final FileObject fo, final VelocityAnalyser analyser)
    {
-      final Set<VelocityAnalyser> analysers = m_Analysers.get(fo);
+      final Set<VelocityAnalyser> analysers = ANALYSERS.get(fo);
 
       if (analysers != null)
          analysers.remove(analyser);
    }
 
-   @Override
-   public Result getResult(final Task task) throws ParseException
+   /**
+    * {@inheritDoc}
+    */
+   @Override public Result getResult(final Task task) throws ParseException
    {
       return(new VTLParserResult(m_Snapshot, m_Parser));
    }
 
-   @Override
-   public void cancel()
+   /**
+    * {@inheritDoc}
+    */
+   @Override public void cancel()
    {
    }
 
-   @Override
-   public void addChangeListener(final ChangeListener cl)
+   /**
+    * {@inheritDoc}
+    */
+   @Override public void addChangeListener(final ChangeListener cl)
    {
    }
 
-   @Override
-   public void removeChangeListener(final ChangeListener cl)
+   /**
+    * {@inheritDoc}
+    */
+   @Override public void removeChangeListener(final ChangeListener cl)
    {
    }
 }

@@ -15,6 +15,7 @@ import org.netbeans.editor.CodeFoldingSideBar;
 import org.netbeans.editor.SideBarFactory;
 
 /**
+ * Creates VTL code folding sidebar to be added in the editor sidebar.
  *
  * @author <a href="mailto:werner.jaeger@t-systems.com">Werner Jaeger</a>
  */
@@ -27,6 +28,9 @@ public class VTLCodeFoldingSideBarFactory implements SideBarFactory
    {
    }
 
+   /**
+    * {@inheritDoc}
+    */
    public JComponent createSideBar(final JTextComponent jtc)
    {
       return(new CodeFoldingSideBar(jtc));

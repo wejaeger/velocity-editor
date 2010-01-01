@@ -14,6 +14,7 @@ import org.netbeans.spi.editor.errorstripe.UpToDateStatusProvider;
 import org.netbeans.spi.editor.errorstripe.UpToDateStatusProviderFactory;
 
 /**
+ * Factory to create a new {@link VTLUpToDateStatusProvider} instance.
  *
  * @author <a href="mailto:werner.jaeger@t-systems.com">Werner Jaeger</a>
  */
@@ -26,6 +27,15 @@ public class VTLUpToDateStatusProviderFactory implements UpToDateStatusProviderF
    {
    }
 
+   /**
+    * Factory methode to create new providers for the given document.
+    *
+    * @param document the document to create a provider for.
+    *        Must not be {@code null}.
+    *
+    * @return a reference to a provider either retrieved from a cache or newly
+    *         created. Never {@code null}.
+    */
    public UpToDateStatusProvider createUpToDateStatusProvider(final Document document)
    {
       return(VTLUpToDateStatusProvider.forDocument(document));

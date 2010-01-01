@@ -24,6 +24,7 @@ import org.netbeans.spi.editor.bracesmatching.BracesMatcherFactory;
 import org.netbeans.spi.editor.bracesmatching.MatcherContext;
 
 /**
+ * Implemnts a VTL braces matcher.
  *
  * @author <a href="mailto:werner.jaeger@t-systems.com">Werner Jaeger</a>
  */
@@ -50,6 +51,9 @@ public class VTLBracesMatcher implements BracesMatcher, BracesMatcherFactory
       m_Context = mc;
    }
 
+   /**
+    * {@inheritDoc}
+    */
    public int[] findOrigin() throws InterruptedException, BadLocationException
    {
       final TokenHierarchy                         localTokenHierarchy = TokenHierarchy.get(m_Context.getDocument());
@@ -63,24 +67,24 @@ public class VTLBracesMatcher implements BracesMatcher, BracesMatcherFactory
 
          switch (token.id().ordinal())
          {
-         case VelocityParserConstants.ELSEIF_DIRECTIVE:
-         case VelocityParserConstants.ELSE_DIRECTIVE:
-         case VelocityParserConstants.FOREACH_DIRECTIVE:
-         case VelocityParserConstants.IF_DIRECTIVE:
-         case VelocityParserConstants.MACRO_DIRECTIVE:
-            aiOrigins       = new int[] {ts.offset(), ts.offset() + token.length()};
-            m_iOriginOffset = aiOrigins[0];
-            m_fBackward     = false;
-            break;
+            case VelocityParserConstants.ELSEIF_DIRECTIVE:
+            case VelocityParserConstants.ELSE_DIRECTIVE:
+            case VelocityParserConstants.FOREACH_DIRECTIVE:
+            case VelocityParserConstants.IF_DIRECTIVE:
+            case VelocityParserConstants.MACRO_DIRECTIVE:
+               aiOrigins       = new int[] {ts.offset(), ts.offset() + token.length()};
+               m_iOriginOffset = aiOrigins[0];
+               m_fBackward     = false;
+               break;
 
-         case VelocityParserConstants.END:
-            aiOrigins       = new int[] {ts.offset(), ts.offset() + token.text().toString().trim().length()};
-            m_iOriginOffset = aiOrigins[0];
-            m_fBackward     = true;
-            break;
+            case VelocityParserConstants.END:
+               aiOrigins       = new int[] {ts.offset(), ts.offset() + token.text().toString().trim().length()};
+               m_iOriginOffset = aiOrigins[0];
+               m_fBackward     = true;
+               break;
 
-         default:
-            aiOrigins = null;
+            default:
+               aiOrigins = null;
          }
       }
       else
@@ -89,6 +93,9 @@ public class VTLBracesMatcher implements BracesMatcher, BracesMatcherFactory
       return(aiOrigins);
    }
 
+   /**
+    * {@inheritDoc}
+    */
    public int[] findMatches() throws InterruptedException, BadLocationException
    {
       final TokenHierarchy                         localTokenHierarchy = TokenHierarchy.get(m_Context.getDocument());
@@ -117,39 +124,39 @@ public class VTLBracesMatcher implements BracesMatcher, BracesMatcherFactory
 
                switch (token.id().ordinal())
                {
-               case VelocityParserConstants.ELSEIF_DIRECTIVE:
-               case VelocityParserConstants.ELSE_DIRECTIVE:
-                  break;
+                  case VelocityParserConstants.ELSEIF_DIRECTIVE:
+                  case VelocityParserConstants.ELSE_DIRECTIVE:
+                     break;
 
-               case VelocityParserConstants.FOREACH_DIRECTIVE:
-               case VelocityParserConstants.IF_DIRECTIVE:
-               case VelocityParserConstants.MACRO_DIRECTIVE:
-                  if (m_fBackward)
-                  {
-                     if (iLevel == 0)
-                        aiMatches = new int[] {ts.offset(), ts.offset() + token.length()};
+                  case VelocityParserConstants.FOREACH_DIRECTIVE:
+                  case VelocityParserConstants.IF_DIRECTIVE:
+                  case VelocityParserConstants.MACRO_DIRECTIVE:
+                     if (m_fBackward)
+                     {
+                        if (iLevel == 0)
+                           aiMatches = new int[] {ts.offset(), ts.offset() + token.length()};
 
-                     iLevel--;
-                  }
-                  else
-                     iLevel++;
+                        iLevel--;
+                     }
+                     else
+                        iLevel++;
 
-                  break;
+                     break;
 
-               case VelocityParserConstants.END:
-                  if (!m_fBackward)
-                  {
-                     if (iLevel == 0)
-                        aiMatches = new int[] {ts.offset(), ts.offset() + token.length()};
+                  case VelocityParserConstants.END:
+                     if (!m_fBackward)
+                     {
+                        if (iLevel == 0)
+                           aiMatches = new int[] {ts.offset(), ts.offset() + token.length()};
 
-                     iLevel--;
-                  }
-                  else
-                     iLevel++;
+                        iLevel--;
+                     }
+                     else
+                        iLevel++;
 
-                  break;
+                     break;
 
-               default:
+                  default:
                }
             }
          }
@@ -158,12 +165,21 @@ public class VTLBracesMatcher implements BracesMatcher, BracesMatcherFactory
       return(aiMatches);
    }
 
+   /**
+    * Creates a {@link VTLBracesMatcher} for searching a VTL document for
+    * matching areas.
+    *
+    * @param mc The context to use for searching. It contains the position of
+    *        a caret in a document and allows to report results.
+    *
+    * @return a reference to a newly created {@link VTLBracesMatcher} object.
+    */
    public BracesMatcher createMatcher(final MatcherContext mc)
    {
       return(new VTLBracesMatcher(mc));
    }
 
-   static List<TokenSequence<? extends TokenId>> getTokenSequences(final TokenHierarchy<?> tokenHierarchy, final int iOriginOffset, final Language<? extends TokenId> language)
+   private static List<TokenSequence<? extends TokenId>> getTokenSequences(final TokenHierarchy<?> tokenHierarchy, final int iOriginOffset, final Language<? extends TokenId> language)
    {
       final List<TokenSequence<?>> localList = tokenHierarchy.embeddedTokenSequences(iOriginOffset, false);
 

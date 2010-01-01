@@ -21,7 +21,7 @@ public class VelocityParserTokenManager implements VelocityParserConstants
     private int lparen = 0;
     private int rparen = 0;
 
-    Stack stateStack = new Stack();
+    Stack<Hashtable<String, Integer>> stateStack = new Stack<Hashtable<String, Integer>>();
     public boolean debugPrint = false;
 
     private boolean inReference;
@@ -39,11 +39,11 @@ public class VelocityParserTokenManager implements VelocityParserConstants
      */
     public boolean stateStackPop()
     {
-        Hashtable h;
+        Hashtable<String, Integer> h;
 
         try
         {
-            h = (Hashtable)stateStack.pop();
+            h = stateStack.pop();
         }
         catch (EmptyStackException e)
         {
@@ -55,13 +55,13 @@ public class VelocityParserTokenManager implements VelocityParserConstants
         if (debugPrint)
             System.out.println(
                 " stack pop (" + stateStack.size() + ") : lparen=" +
-                    ((Integer)h.get("lparen")).intValue() +
-                        " newstate=" + ((Integer)h.get("lexstate")).intValue());
+                    h.get("lparen").intValue() +
+                        " newstate=" + h.get("lexstate").intValue());
 
-        lparen = ((Integer)h.get("lparen")).intValue();
-        rparen = ((Integer)h.get("rparen")).intValue();
+        lparen = h.get("lparen").intValue();
+        rparen = h.get("rparen").intValue();
 
-        SwitchTo(((Integer)h.get("lexstate")).intValue());
+        SwitchTo(h.get("lexstate").intValue());
 
         return(true);
     }
@@ -76,7 +76,7 @@ public class VelocityParserTokenManager implements VelocityParserConstants
         if (debugPrint)
             System.out.println(" (" + stateStack.size() + ") pushing cur state : " + curLexState);
 
-        final Hashtable h = new Hashtable();
+        final Hashtable<String, Integer> h = new Hashtable<String, Integer>();
 
         h.put("lexstate", new Integer( curLexState ) );
         h.put("lparen", new Integer( lparen ));
@@ -84,16 +84,15 @@ public class VelocityParserTokenManager implements VelocityParserConstants
 
         lparen = 0;
 
-        stateStack.push( h );
+        stateStack.push(h);
 
-        return true;
+        return(true);
     }
 
     /**
      *  Clears all state variables, resets to
      *  start values, clears stateStack.  Call
      *  before parsing.
-     *  @return void
      */
     public void clearStateVars()
     {

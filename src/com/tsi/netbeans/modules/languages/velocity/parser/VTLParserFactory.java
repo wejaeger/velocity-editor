@@ -15,6 +15,7 @@ import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.parsing.spi.ParserFactory;
 
 /**
+ * Factory to create {@link VTLParser} objects.
  *
  * @author <a href="mailto:werner.jaeger@t-systems.com">Werner Jaeger</a>
  */
@@ -27,8 +28,10 @@ public class VTLParserFactory extends ParserFactory
    {
    }
 
-   @Override
-   public Parser createParser(final Collection<Snapshot> snapshots)
+   /**
+    * {@inheritDoc}
+    */
+   @Override public Parser createParser(final Collection<Snapshot> snapshots)
    {
       return(new VTLParser());
    }

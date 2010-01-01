@@ -1,15 +1,35 @@
+/*
+ * $Id$
+ *
+ * Copyright (c) 2009 T-Systems International GmbH.
+ * All rights reserved.
+ * This software is the confidential and proprietary information
+ * of T-Systems International GmbH.
+ *
+ */
 package com.tsi.netbeans.modules.languages.velocity.editor.fold;
 
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Position;
 
+/**
+ * Hold diverse information about a fold added to zhe editor.
+ *
+ * @author <a href="mailto:werner.jaeger@t-systems.com">Werner Jaeger</a>
+ */
 final class VTLFoldInfo implements Comparable
 {
+   /**
+    * State of this fold.
+    */
    enum State
    {
+      /** Already added in previous parses. */
       OLD,
+      /** Added in the actulal parsing. */
       NEW,
+      /** Not changed by the actual parsing */
       UNTOUCHED;
    }
 
@@ -18,7 +38,20 @@ final class VTLFoldInfo implements Comparable
    private boolean  m_fCollapseByDefault;
    private State    m_State;
 
-   VTLFoldInfo(final Document document, final int iStart, final int iEnd, final boolean fCollapseByDefault) throws BadLocationException
+   /**
+    * Creates new {@code VTLFoldInfo}.
+    *
+    * @param document the document this fold belongs to.
+    *        Must not be {@code null}.
+    * @param iStart the start offset of the fold in the document.
+    * @param iEnd the end offset of the fold in the document.
+    * @param fCollapseByDefault {@code true} if and only if the fold is
+    *        collapsed when created,
+    *
+    * @throws BadLocationException if the given start or end offset does not
+    *         represent a valid location in the associated document.
+    */
+   VTLFoldInfo (final Document document, final int iStart, final int iEnd, final boolean fCollapseByDefault) throws BadLocationException
    {
       m_iStart             = document.createPosition(iStart);
       m_iEnd               = document.createPosition(iEnd);
@@ -26,24 +59,38 @@ final class VTLFoldInfo implements Comparable
       m_State              = State.NEW;
    }
 
+   /**
+    * Setthe current state.
+    *
+    * @param state the state to set.
+    */
    void setState(final State state)
    {
       m_State = state;
    }
 
+   /**
+    * Retrieves the current state.
+    *
+    * @return the current state.
+    */
    State getState()
    {
       return(m_State);
    }
 
-   @Override
-   public int hashCode()
+   /**
+    * {@inheritDoc}
+    */
+   @Override public int hashCode()
    {
       return(1);
    }
 
-   @Override
-   public boolean equals(final Object oObject)
+   /**
+    * {@inheritDoc}
+    */
+   @Override public boolean equals(final Object oObject)
    {
       final boolean fRet;
 
@@ -55,6 +102,9 @@ final class VTLFoldInfo implements Comparable
       return(fRet);
    }
 
+   /**
+    * {@inheritDoc}
+    */
    public int compareTo(final Object object)
    {
       final VTLFoldInfo localFoldInfo = (VTLFoldInfo)object;

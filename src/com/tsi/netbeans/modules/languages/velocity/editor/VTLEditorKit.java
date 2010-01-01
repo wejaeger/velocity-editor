@@ -12,6 +12,7 @@ package com.tsi.netbeans.modules.languages.velocity.editor;
 import org.netbeans.modules.editor.NbEditorKit;
 
 /**
+ * The VTL editor kit class.
  *
  * @author <a href="mailto:werner.jaeger@t-systems.com">Werner Jaeger</a>
  */
@@ -24,8 +25,10 @@ public class VTLEditorKit extends NbEditorKit
    {
    }
 
-   @Override
-   public String getContentType()
+   /**
+    * {@inheritDoc}
+    */
+   @Override public String getContentType()
    {
       return("text/x-velocity");
    }
