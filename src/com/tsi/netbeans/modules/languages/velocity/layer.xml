@@ -7,6 +7,11 @@
       <folder name="text">
          <folder name="x-velocity">
             <attr name="SystemFileSystem.localizingBundle" stringvalue="com.tsi.netbeans.modules.languages.velocity.Bundle"/>
+            <folder name="Preferences">
+                <folder name="Defaults">
+                    <file name="com-tsi-netbeans-modules-languages-velocity-preferences.xml" url="DefaultPreferences.xml" />
+                </folder>
+            </folder>
             <folder name="FontsColors">
                <folder name="NetBeans">
                   <folder name="Defaults">
