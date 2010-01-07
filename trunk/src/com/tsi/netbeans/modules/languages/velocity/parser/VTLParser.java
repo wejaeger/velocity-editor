@@ -85,13 +85,13 @@ public class VTLParser extends Parser
    }
 
    /**
-    * Register an analyser that {@code visit} methode gets called each
-    * time the {@link #parse} methode is done with creating an AST.
+    * Register an analyzer that {@code visit} method gets called each
+    * time the {@link #parse} method is done with creating an AST.
     *
-    * @param fo the file object for which to register the given analyser.
+    * @param fo the file object for which to register the given analyzer.
     *           Must not be {@code null}.
-    * @param analyser a reference to an analyser that's visit method shall be
-    *        called. If the passed analyser is already registered this methode
+    * @param analyser a reference to an analyzer that's visit method shall be
+    *        called. If the passed analyzer is already registered this method
     *        returns silently. Must not be {@code null}.
     *
     * @throws ParseException
@@ -111,12 +111,12 @@ public class VTLParser extends Parser
    }
 
    /**
-    * De register an registered analyser.
+    * De register an registered analyzer.
     *
-    * @param fo the file object for which to remove the given analyser.
+    * @param fo the file object for which to remove the given analyzer.
     *           Must not be {@code null}.
-    * @param analyser a reference to an analyser to be removed. If the passed
-    *        analyser id not registered this methode returns silently.
+    * @param analyser a reference to an analyzer to be removed. If the passed
+    *        analyzer id not registered this method returns silently.
     *        Must not be {@code null}.
     *
     * @throws ParseException

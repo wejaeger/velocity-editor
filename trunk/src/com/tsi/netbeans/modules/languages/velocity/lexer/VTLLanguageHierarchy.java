@@ -119,7 +119,7 @@ public class VTLLanguageHierarchy extends LanguageHierarchy<VTLTokenId>
    }
 
    /**
-    * Retrives a VTL token identifier object for the given token identifier as
+    * Retrieves a VTL token identifier object for the given token identifier as
     * defined in {@link
     * com.tsi.netbeans.modules.languages.velocity.jcclexer.VelocityParserConstants
     * VelocityParserConstants}.

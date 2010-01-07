@@ -10,11 +10,11 @@
 package com.tsi.netbeans.modules.languages.velocity.jcclexer.node;
 
 /**
- * Vistitor baswe Implementation that servers as baseclass for concrete
- * analysers.
+ * Visitor base Implementation that servers as base class for concrete
+ * analyzers.
  *
  * <p>
- *    Eeach {@code visit} methode implementation takes no actions beside
+ *    Each {@code visit} method implementation takes no actions beside
  *    traversing the child nodes.
  * </p>
  * @author <a href="mailto:werner.jaeger@t-systems.com">Werner Jaeger</a>

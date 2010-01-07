@@ -12,7 +12,7 @@ package com.tsi.netbeans.modules.languages.velocity.jcclexer;
 /**
  *  Exception to indicate problem happened while constructing #macro()
  *
- *  For internal use in parser - not to be passed to app level
+ *  For internal use in parser - not to be passed to application level
  *
  * @author <a href="mailto:werner.jaeger@t-systems.com">Werner Jaeger</a>
  */
@@ -41,9 +41,9 @@ public class MacroParseException extends ParseException
    }
 
    /**
-    * Returns the Template name where this exception occured.
+    * Returns the Template name where this exception occurred.
     *
-    * @return The Template name where this exception occured.
+    * @return The Template name where this exception occurred.
     */
    public String getTemplateName()
    {
@@ -51,9 +51,9 @@ public class MacroParseException extends ParseException
    }
 
    /**
-    * Returns the line number where this exception occured.
+    * Returns the line number where this exception occurred.
     *
-    * @return The line number where this exception occured.
+    * @return The line number where this exception occurred.
     */
    public int getLineNumber()
    {
@@ -70,9 +70,9 @@ public class MacroParseException extends ParseException
    }
 
    /**
-    * Returns the column number where this exception occured.
+    * Returns the column number where this exception occurred.
     *
-    * @return The column number where this exception occured.
+    * @return The column number where this exception occurred.
     */
    public int getColumnNumber()
    {

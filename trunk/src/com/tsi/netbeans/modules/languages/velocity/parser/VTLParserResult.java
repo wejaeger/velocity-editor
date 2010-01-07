@@ -45,7 +45,7 @@ public class VTLParserResult extends Result
     *
     * @return a reference to th parser instance actually use for parsing.
     *
-    * @throws ParseException if this instace was {@link
+    * @throws ParseException if this instance was {@link
     *         VTLParserResult#invalidate() invalidated}.
     */
    public VelocityParser getParser() throws ParseException
