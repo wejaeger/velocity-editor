@@ -28,7 +28,7 @@ public class VTLUpToDateStatusProviderFactory implements UpToDateStatusProviderF
    }
 
    /**
-    * Factory methode to create new providers for the given document.
+    * Factory method to create new providers for the given document.
     *
     * @param document the document to create a provider for.
     *        Must not be {@code null}.

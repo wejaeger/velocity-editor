@@ -362,13 +362,23 @@ TOKEN_MGR_DECLS:
     private int lparen = 0;
     private int rparen = 0;
 
-    Stack<Hashtable<String, Integer>> stateStack = new Stack<Hashtable<String, Integer>>();
-    public boolean debugPrint = false;
+    private Stack<Hashtable<String, Integer>> stateStack = new Stack<Hashtable<String, Integer>>();
+    private boolean debugPrint = false;
 
     private boolean inReference;
-    public boolean inDirective;
     private boolean inComment;
     public  boolean inSet;
+    public  boolean inDirective;
+
+    /**
+     * Retrieves the current lexer state.
+     *
+     * @return the current lexer state.
+     */
+    public int getCurrLexState()
+    {
+       return(curLexState);
+    }
 
     /**
      *  pushes the current state onto the 'state stack',

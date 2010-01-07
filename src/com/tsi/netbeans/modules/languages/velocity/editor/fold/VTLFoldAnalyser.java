@@ -32,7 +32,7 @@ import org.netbeans.spi.editor.fold.FoldOperation;
 import org.openide.text.NbDocument;
 
 /**
- * Analyses an abstract syntax tree to find and add code folds to VTL editor.
+ * Analyzes an abstract syntax tree to find and add code folds to VTL editor.
  *
  * @author <a href="mailto:werner.jaeger@t-systems.com">Werner Jaeger</a>
  */
@@ -47,9 +47,9 @@ class VTLFoldAnalyser extends VelocityAnalyser
    /**
     * Creates new {@code VTLFoldAnalyser}.
     *
-    * @param operation a reference to the fold operation this analyser acts on.
+    * @param operation a reference to the fold operation this analyzer acts on.
     *        must not be {@code null}.
-    * @param currentFolds a refference to a map of currently added folds.
+    * @param currentFolds a reference to a map of currently added folds.
     *        Must not be {@code null}.
     */
    VTLFoldAnalyser(final FoldOperation operation, final Map<VTLFoldInfo, Fold> currentFolds)

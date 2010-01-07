@@ -43,7 +43,7 @@ class VTLUpToDateStatusProvider extends UpToDateStatusProvider
    }
 
    /**
-    * Factory methode to create new providers for a given document.
+    * Factory method to create new providers for a given document.
     *
     * @param document the document to create a provider for.
     *        Must not be {@code null}.
@@ -102,7 +102,7 @@ class VTLUpToDateStatusProvider extends UpToDateStatusProvider
    }
 
    /**
-    * Switch current Up-to-date status to ok.
+    * Switch current Up-to-date status to okay.
     *
     * <p>
     *   Up-to-date status saying everything is up-to-date.

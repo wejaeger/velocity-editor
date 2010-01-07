@@ -38,6 +38,9 @@ class VTLLexer implements Lexer<VTLTokenId>
       m_Info                       = info;
       m_VelocityParserTokenManager = new VelocityParserTokenManager(new VelocityCharStream(info.input()));
       m_CurrLexState               = null;
+
+      if (info.state() != null)
+         m_VelocityParserTokenManager.SwitchTo((Integer)info.state());
    }
 
    /**
@@ -47,31 +50,13 @@ class VTLLexer implements Lexer<VTLTokenId>
    {
       final Token<VTLTokenId> returnToken;
 
-      com.tsi.netbeans.modules.languages.velocity.jcclexer.Token token = m_VelocityParserTokenManager.getNextToken();
+      final com.tsi.netbeans.modules.languages.velocity.jcclexer.Token token = m_VelocityParserTokenManager.getNextToken();
 
-      if (token.kind == VelocityParserConstants.SINGLE_LINE_COMMENT_START || token.kind == VelocityParserConstants.SINGLE_LINE_COMMENT)
-      {
-         token = m_VelocityParserTokenManager.getNextToken();
-         m_CurrLexState = Integer.valueOf(1);
-      }
-      else if (token.kind == VelocityParserConstants.IDENTIFIER)
-      {
-         while (true)
-         {
-            final int c = m_Info.input().read();
-            m_Info.input().backup(1);
-            if (c == '.')
-            {
-               token = m_VelocityParserTokenManager.getNextToken();
-               token = m_VelocityParserTokenManager.getNextToken();
-            }
-            else
-               break;
-         }
-         m_CurrLexState = Integer.valueOf(2);
-      }
-      else
+      final int iCurLexState = m_VelocityParserTokenManager.getCurrLexState();
+      if (iCurLexState == VelocityParserConstants.DEFAULT)
          m_CurrLexState = null;
+      else
+         m_CurrLexState = iCurLexState;
 
       if (m_Info.input().readLength() < 1)
          returnToken = null;
@@ -86,7 +71,7 @@ class VTLLexer implements Lexer<VTLTokenId>
     */
    @Override public Object state()
    {
-      return(null);
+      return(m_CurrLexState);
    }
 
    /**

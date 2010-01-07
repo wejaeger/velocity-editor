@@ -14,7 +14,7 @@ import javax.swing.text.Document;
 import javax.swing.text.Position;
 
 /**
- * Hold diverse information about a fold added to zhe editor.
+ * Hold diverse information about a fold added to the editor.
  *
  * @author <a href="mailto:werner.jaeger@t-systems.com">Werner Jaeger</a>
  */
@@ -27,7 +27,7 @@ final class VTLFoldInfo implements Comparable
    {
       /** Already added in previous parses. */
       OLD,
-      /** Added in the actulal parsing. */
+      /** Added in the actual parsing. */
       NEW,
       /** Not changed by the actual parsing */
       UNTOUCHED;
@@ -60,7 +60,7 @@ final class VTLFoldInfo implements Comparable
    }
 
    /**
-    * Setthe current state.
+    * Set the current state.
     *
     * @param state the state to set.
     */
