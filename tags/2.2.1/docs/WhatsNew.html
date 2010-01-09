@@ -1,0 +1,33 @@
+<b>For version 2.2.1</b>
+<ul>
+	<li>Bugfix: adding already existing code folds</li>
+	<li>Bugfix: adding multi line comment at the end causes IDE to hang</li>
+	<li>Bugfix: syntax color lost when editing references, single line comments and string literals</li>
+	<li>Bugfix: brace match at the end of file causes illegal position exception</li>
+</ul>
+<b>For version 2.2.0</b>
+<ul>
+	<li>support for braces matching (<font style="background-color: #ffff00">#ForEach</font>  .. <font style="background-color: #ffff00">#end</font>,
+		 <font style="background-color: #ffff00">#if</font> .. <font style="background-color: #ffff00">#end</font>,
+		 <font style="background-color: #ffff00">#elsif</font> .. <font style="background-color: #ffff00">#end</font>,
+		 <font style="background-color: #ffff00">#else</font> .. <font style="background-color: #ffff00">#end</font> and
+		 <font style="background-color: #ffff00">#macro</font> .. <font style="background-color: #ffff00">#end</font>
+		 ) added</li>
+</ul>
+<b>For version 2.1.0</b>
+<ul>
+	<li>supports code folding for #ForEach, #if, #elsif, #else and #macro directives</li>
+	<li>syntax coloring for include directive added (but no processing of the included template)</li>
+	<li>macro calls a now recognized</li>
+	<li>does now correctly color escaped directive in text color instead of directive color</li>
+	<li>foreach directive now supports object array and vector as argument after the 'in' keyword</li>
+	<li>error stripe status indicator works now</li>
+</ul>
+
+<b>For version 2.0.0</b>
+<ul>
+	<li>
+		completely revised version, no longer based on deprecated NBS (NetBeans Schlieman), instead it is now based on a javacc
+		5.0 defined grammar (*.jj) definition.
+	</li>
+</ul>

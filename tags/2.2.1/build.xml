@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- $Id$ -->
+<!-- <a href="mailto:werner.jaeger@t-systems.com">Werner Jaeger</a> on December 14, 2009, 05:38 AM -->
+
+<!-- You may freely edit this file. See harness/README in the NetBeans platform -->
+<!-- for some information on what you could do (e.g. targets to override). -->
+<!-- If you delete this file and reopen the project it will be recreated. -->
+<project name="com.tsi.netbeans.modules.languages.velocity" default="netbeans" basedir=".">
+   <description>Builds, tests, and runs the project com.tsi.netbeans.modules.languages.velocity.</description>
+   <import file="nbproject/build-impl.xml"/>
+
+   <property location="." name="project.root"/>
+   <property name="javacc.home" value="C:/Progra~1/JavaSoft/javacc-5.0" />
+   <property name="src.parser.dir" value="src/com/tsi/netbeans/modules/languages/velocity/jcclexer" />
+   <property name="build.parser" value="${src.parser.dir}" />
+   <property name="build.parser.node" value="${src.parser.dir}/node" />
+   <property name="parserjj.file" value="${build.parser.node}/VelocityParser.jj" />
+   <property name="parserjjt.file" value="${src.parser.dir}/VelocityParser.jjt" />
+
+   <property name="jar-excludes" value="**/*.jj*,**/*.java,**/*.form,**/package.html,**/doc-files/"/>
+
+   <!-- =================================================================== -->
+   <!-- Ensures code conforms to design and programing guidelines           -->
+   <!-- =================================================================== -->
+   <target name="qa" depends="compile" description="Makes some test to ensure code conforms to our design- and programing guidlines">
+     <taskdef classname="com.puppycrawl.tools.checkstyle.CheckStyleTask" classpath="../common/qa/checkstyle-all.jar;../common/qa/simian.jar" name="checkstyle"/>
+     <checkstyle config="../common/qa/tsiChecks.xml" classpath="build/classes;build/public-package-jars/org-netbeans-modules-parsing-api.jar;build/public-package-jars/org-openide-loaders.jar">
+         <fileset dir="${basedir}" includes="src/com/tsi/netbeans/modules/languages/velocity/**/*.java" excludes="src/com/tsi/netbeans/modules/languages/velocity/jcclexer/**/,src/com/tsi/netbeans/modules/languages/velocity/lexer/VelocityCharStream.java"/>
+         <property key="checkstyle.StrictDuplicateCode.lines" value="20"/>
+         <property key="checkstyle.filter.file" value="${project.root}/../common/qa/suppressions.xml"/>
+      </checkstyle>
+   </target>
+
+   <!-- =================================================================== -->
+   <!-- Runs JDepend on the build/classes directory,                        -->
+   <!-- writes the XML report to the build/jdepend-report.xml file          -->
+   <!-- and generates the jdepend-report.html file using the jdepend.xsl    -->
+   <!-- stylesheet.                                                         -->
+   <!-- =================================================================== -->
+   <target name="jdepend" depends="compile" description="Runs JDepend on the build/classes directory, and generates the report in build/jdepend directory.">
+      <concat destfile="build/classes/jdepend.properties">
+      	analyzeInnerClasses=false
+      	ignore=java.*,javax.*,org.netbeans.*,org.openide.*,com.tsi.netbeans.modules.languages.velocity.jcclexer.node
+      </concat>
+      <jdepend fork="yes" format="xml" outputfile="build/jdepend-report.xml">
+         <classespath>
+            <pathelement location="build/classes"/>
+         </classespath>
+         <classpath>
+            <pathelement location="../common/qa/jdepend.jar"/>
+            <pathelement location="build/classes"/>
+         </classpath>
+      </jdepend>
+      <xslt basedir="build" destdir="build/jdepend" includes="jdepend-report.xml" style="../common/qa/jdepend-frames.xsl"/>
+      <delete file="build/jdepend-report.xml"/>
+      <delete file="build/classes/jdepend.properties"/>
+      <delete file="build/jdepend/jdepend-report.html"/>
+   </target>
+
+
+   <!-- =================================================================== -->
+   <!-- rebuilds the JJTree/JavaCC based parser                             -->
+   <!-- =================================================================== -->
+   <!--<target name="parser" depends="parser-check,jjtree,javacc,javacc-cleanup" description="Rebuilds the JJTree/JavaCC based parser" />-->
+   <target name="parser" depends="parser-check,jjtree,javacc,javacc-cleanup" description="Rebuilds the JJTree/JavaCC based parser" />
+
+   <target name="parser-check">
+      <condition property="javacc-home-unset">
+         <equals arg1="${javacc.home}" arg2="*unset*" />
+      </condition>
+
+      <fail if="javacc-home-unset">
+         Could not run javacc:
+         ***********************************************************
+         ** You have not configured your JavaCC installation
+         ** location in the javacc.home property.
+         ***********************************************************
+      </fail>
+
+      <condition property="parser-task-runnable">
+         <and>
+            <available file="${javacc.home}" type="dir"/>
+
+            <!-- specify ant versions in the negative, to allow future upgrades-->
+            <not>
+               <or>
+                  <contains string="${ant.version}" substring="1.2"/>
+                  <contains string="${ant.version}" substring="1.3"/>
+                  <contains string="${ant.version}" substring="1.4"/>
+                  <contains string="${ant.version}" substring="1.5"/>
+               </or>
+            </not>
+         </and>
+      </condition>
+
+      <fail unless="parser-task-runnable">
+         Could not run javacc:
+         ***********************************************************
+         **
+         ** JavaCC 3.2 or later must be installed at ${javacc.home}.
+         ** Ant must be at least version 1.6.x.
+         **
+         ***********************************************************
+      </fail>
+
+      <echo>
+         ***********************************************************
+         ** Creating VelocityParser.jj and VelocityParser.java in
+         ** source tree.
+         **
+         ** Note: ASTNode files generated by jjtree are
+         ** not generated with this task.  To create new ASTNode files,
+         ** run jjtree manually then copy the relevant files into
+         ** the runtime/parser/node directory (deleting all other
+         ** generated files).
+         **
+         ***********************************************************
+      </echo>
+   </target>
+
+   <target name="jjtree" depends="parser-check">
+      <delete file="${parserjj.file}" />
+      <jjtree target="${parserjjt.file}" outputdirectory="${build.parser.node}" javacchome="${javacc.home}" buildnodefiles="true" />
+   </target>
+
+   <target name="javacc" depends="parser-check">
+      <javacc target="${parserjj.file}" outputdirectory="${build.parser}" javacchome="${javacc.home}" />
+   </target>
+
+   <target name="javacc-cleanup" depends="parser-check">
+<!--      <delete>
+         <fileset dir="${build.parser.node}/">
+            <include name="*.*"/>
+         </fileset>
+      </delete>-->
+   </target>
+
+</project>
