@@ -11,7 +11,7 @@
    <import file="nbproject/build-impl.xml"/>
 
    <property location="." name="project.root"/>
-   <property name="javacc.home" value="C:/Progra~1/JavaSoft/javacc-5.0" />
+   <property name="javacc.home" value="/opt/javacc-5.0" />
    <property name="src.parser.dir" value="src/com/tsi/netbeans/modules/languages/velocity/jcclexer" />
    <property name="build.parser" value="${src.parser.dir}" />
    <property name="build.parser.node" value="${src.parser.dir}/node" />
