@@ -29,7 +29,7 @@ public class VTLFoldManagerFactory implements FoldManagerFactory
    /**
     * {@inheritDoc}
     */
-   public FoldManager createFoldManager()
+   @Override public FoldManager createFoldManager()
    {
       return(new VTLFoldManager());
    }

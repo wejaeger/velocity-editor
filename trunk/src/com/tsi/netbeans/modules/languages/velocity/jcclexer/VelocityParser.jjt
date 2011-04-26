@@ -367,6 +367,7 @@ TOKEN_MGR_DECLS:
 
     private boolean inReference;
     private boolean inComment;
+    private boolean inUnparsed;
     public  boolean inSet;
     public  boolean inDirective;
 
@@ -454,6 +455,7 @@ TOKEN_MGR_DECLS:
         inReference = false;
         inDirective = false;
         inComment = false;
+        inUnparsed = false;
         inSet = false;
 
         return;
@@ -472,7 +474,7 @@ TOKEN_MGR_DECLS:
 
         boolean closed = false;
 
-        if (inComment)
+        if (inComment || inUnparsed)
             closed = true;
 
         while (!closed)
@@ -553,7 +555,7 @@ TOKEN:
 {
     <LPAREN: "(">
     {
-        if (!inComment)
+        if (!inComment && !inUnparsed)
             lparen++;
 
         /*
@@ -649,7 +651,7 @@ TOKEN:
 {
   <SET_DIRECTIVE: (" "|"\t")*  ("#set" | "#{set}")  (" ")* "(">
     {
-        if (!inComment)
+        if (!inComment && !inUnparsed)
         {
             inDirective = true;
 
@@ -664,7 +666,7 @@ TOKEN:
         /*
          *  need the LPAREN action
          */
-        if (!inComment)
+        if (!inComment && !inUnparsed)
         {
             lparen++;
 
@@ -686,7 +688,7 @@ MORE :
      */
     <DOLLAR: ("\\")* "$">
     {
-        if (!inComment)
+        if (!inComment && !inUnparsed)
         {
             /*
              * if we find ourselves in REFERENCE, we need to pop down
@@ -710,7 +712,7 @@ MORE :
 
 |   <DOLLARBANG: ("\\")* "$" ("\\")* "!">
     {
-        if (!inComment)
+        if (!inComment && !inUnparsed)
         {
             /*
              * if we find ourselves in REFERENCE, we need to pop down
@@ -734,7 +736,7 @@ MORE :
 
 |   <"#**" ~["#"]>
     {
-    	if (!inComment)
+    	if (!inComment && !inUnparsed)
     	{
 	        input_stream.backup(1);
 	        inComment = true;
@@ -745,7 +747,7 @@ MORE :
 
 |   "#*"
     {
-    	if (!inComment)
+    	if (!inComment && !inUnparsed)
     	{
 	        inComment=true;
 	        stateStackPush();
@@ -753,11 +755,21 @@ MORE :
     	}
     }
 
+|   "#[["
+    {
+    	if (!inComment && !inUnparsed)
+    	{
+	        inUnparsed=true;
+	        stateStackPush();
+	        SwitchTo(IN_UNPARSED_CONTENT);
+    	}
+    }
+
 |   <HASH: "#" ~["#"]>
     {
         input_stream.backup(1);
         image.deleteCharAt(image.length() - 1);
-        if (!inComment)
+        if (!inComment && !inUnparsed)
         {
             /*
              * We can have the situation where #if($foo)$foo#end.
@@ -790,7 +802,7 @@ TOKEN :
 {
    <SINGLE_LINE_COMMENT_START: "##">
    {
-        if (!inComment)
+        if (!inComment && !inUnparsed)
         {
             if (curLexState == REFERENCE)
             {
@@ -847,7 +859,22 @@ TOKEN :
   }
 }
 
-<IN_SINGLE_LINE_COMMENT,IN_FORMAL_COMMENT,IN_MULTI_LINE_COMMENT>
+/* -----------------------------------------------------------------------
+ *
+ *   UNPARSED_CONTENT Lexical tokens
+ *
+ *-----------------------------------------------------------------------*/
+<IN_UNPARSED_CONTENT>
+TOKEN :
+{
+  <UNPARSED_CONTENT: "]]#">
+  {
+    inUnparsed = false;
+    stateStackPop();
+  }
+}
+
+<IN_SINGLE_LINE_COMMENT,IN_FORMAL_COMMENT,IN_MULTI_LINE_COMMENT,IN_UNPARSED_CONTENT>
 SKIP :
 {
   <~[]>
@@ -1242,6 +1269,7 @@ void Statement() #void : {}
 |   StopStatement()
 |   LOOKAHEAD(2) Reference()
 |   Comment()
+|   UnparsedContent()
 |   SetDirective()
 |   EscapedDirective()
 |   Escape()
@@ -1346,6 +1374,18 @@ void Comment() : {}
 	 <SINGLE_LINE_COMMENT_START> (<SINGLE_LINE_COMMENT>) ?
 |   <MULTI_LINE_COMMENT>
 |   <FORMAL_COMMENT>
+   }
+   catch (ParseException pe)
+   {
+      recover(pe, RPAREN);
+   }
+}
+
+void UnparsedContent() : {}
+{
+   try
+   {
+    <UNPARSED_CONTENT>
    }
    catch (ParseException pe)
    {

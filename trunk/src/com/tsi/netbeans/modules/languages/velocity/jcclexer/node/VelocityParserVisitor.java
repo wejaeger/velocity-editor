@@ -10,6 +10,7 @@ public interface VelocityParserVisitor
   public Object visit(ASTEscapedDirective node, Object data);
   public Object visit(ASTEscape node, Object data);
   public Object visit(ASTComment node, Object data);
+  public Object visit(ASTUnparsedContent node, Object data);
   public Object visit(ASTFloatingPointLiteral node, Object data);
   public Object visit(ASTIntegerLiteral node, Object data);
   public Object visit(ASTStringLiteral node, Object data);
@@ -50,4 +51,4 @@ public interface VelocityParserVisitor
   public Object visit(ASTModNode node, Object data);
   public Object visit(ASTNotNode node, Object data);
 }
-/* JavaCC - OriginalChecksum=2f54674a0f46102af680a0459c993813 (do not edit this line) */
+/* JavaCC - OriginalChecksum=bcf544a9e3ca37e533560a2f8726de7d (do not edit this line) */

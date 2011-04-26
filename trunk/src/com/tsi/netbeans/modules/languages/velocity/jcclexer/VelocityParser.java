@@ -313,6 +313,7 @@ public class VelocityParser/*@bgen(jjtree)*/implements VelocityParserTreeConstan
           case TEXT:
           case FORMAL_COMMENT:
           case MULTI_LINE_COMMENT:
+          case UNPARSED_CONTENT:
           case STRING_LITERAL:
           case FOREACH_DIRECTIVE:
           case MACRO_DIRECTIVE:
@@ -399,6 +400,9 @@ public class VelocityParser/*@bgen(jjtree)*/implements VelocityParserTreeConstan
           case FORMAL_COMMENT:
           case MULTI_LINE_COMMENT:
             Comment();
+            break;
+          case UNPARSED_CONTENT:
+            UnparsedContent();
             break;
           case SET_DIRECTIVE:
             SetDirective();
@@ -565,6 +569,26 @@ public class VelocityParser/*@bgen(jjtree)*/implements VelocityParserTreeConstan
           jj_consume_token(-1);
           throw new ParseException();
         }
+      } catch (ParseException pe) {
+      recover(pe, RPAREN);
+      }
+    } finally {
+     if (jjtc000) {
+       jjtree.closeNodeScope(jjtn000, true);
+       jjtreeCloseNodeScope(jjtn000);
+     }
+    }
+  }
+
+  final public void UnparsedContent() throws ParseException {
+                          /*@bgen(jjtree) UnparsedContent */
+  ASTUnparsedContent jjtn000 = new ASTUnparsedContent(JJTUNPARSEDCONTENT);
+  boolean jjtc000 = true;
+  jjtree.openNodeScope(jjtn000);
+  jjtreeOpenNodeScope(jjtn000);
+    try {
+      try {
+        jj_consume_token(UNPARSED_CONTENT);
       } catch (ParseException pe) {
       recover(pe, RPAREN);
       }
@@ -869,6 +893,7 @@ public class VelocityParser/*@bgen(jjtree)*/implements VelocityParserTreeConstan
             case TEXT:
             case FORMAL_COMMENT:
             case MULTI_LINE_COMMENT:
+            case UNPARSED_CONTENT:
             case STRING_LITERAL:
             case FOREACH_DIRECTIVE:
             case MACRO_DIRECTIVE:
@@ -1485,6 +1510,7 @@ public class VelocityParser/*@bgen(jjtree)*/implements VelocityParserTreeConstan
             case TEXT:
             case FORMAL_COMMENT:
             case MULTI_LINE_COMMENT:
+            case UNPARSED_CONTENT:
             case STRING_LITERAL:
             case FOREACH_DIRECTIVE:
             case MACRO_DIRECTIVE:
@@ -1598,6 +1624,7 @@ public class VelocityParser/*@bgen(jjtree)*/implements VelocityParserTreeConstan
             case TEXT:
             case FORMAL_COMMENT:
             case MULTI_LINE_COMMENT:
+            case UNPARSED_CONTENT:
             case STRING_LITERAL:
             case FOREACH_DIRECTIVE:
             case MACRO_DIRECTIVE:
@@ -1787,6 +1814,7 @@ public class VelocityParser/*@bgen(jjtree)*/implements VelocityParserTreeConstan
             case TEXT:
             case FORMAL_COMMENT:
             case MULTI_LINE_COMMENT:
+            case UNPARSED_CONTENT:
             case STRING_LITERAL:
             case FOREACH_DIRECTIVE:
             case MACRO_DIRECTIVE:
@@ -1910,6 +1938,7 @@ public class VelocityParser/*@bgen(jjtree)*/implements VelocityParserTreeConstan
             case TEXT:
             case FORMAL_COMMENT:
             case MULTI_LINE_COMMENT:
+            case UNPARSED_CONTENT:
             case STRING_LITERAL:
             case FOREACH_DIRECTIVE:
             case MACRO_DIRECTIVE:
@@ -2008,6 +2037,7 @@ public class VelocityParser/*@bgen(jjtree)*/implements VelocityParserTreeConstan
             case TEXT:
             case FORMAL_COMMENT:
             case MULTI_LINE_COMMENT:
+            case UNPARSED_CONTENT:
             case STRING_LITERAL:
             case FOREACH_DIRECTIVE:
             case MACRO_DIRECTIVE:
@@ -2890,122 +2920,6 @@ public class VelocityParser/*@bgen(jjtree)*/implements VelocityParserTreeConstan
     finally { jj_save(10, xla); }
   }
 
-  private boolean jj_3R_31() {
-    if (jj_3R_40()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_74() {
-    if (jj_3R_24()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_77() {
-    if (jj_3R_43()) return true;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_78()) { jj_scanpos = xsp; break; }
-    }
-    return false;
-  }
-
-  private boolean jj_3R_72() {
-    if (jj_3R_24()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_65() {
-    if (jj_scan_token(LBRACKET)) return true;
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_72()) {
-    jj_scanpos = xsp;
-    if (jj_3R_73()) return true;
-    }
-    if (jj_scan_token(DOUBLEDOT)) return true;
-    xsp = jj_scanpos;
-    if (jj_3R_74()) {
-    jj_scanpos = xsp;
-    if (jj_3R_75()) return true;
-    }
-    if (jj_scan_token(RBRACKET)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_29() {
-    if (jj_3R_40()) return true;
-    return false;
-  }
-
-  private boolean jj_3_2() {
-    if (jj_scan_token(DOUBLE_ESCAPE)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_67() {
-    if (jj_scan_token(LBRACKET)) return true;
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_77()) jj_scanpos = xsp;
-    if (jj_scan_token(RBRACKET)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_36() {
-    if (jj_3R_39()) return true;
-    return false;
-  }
-
-  private boolean jj_3_8() {
-    if (jj_3R_30()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_66() {
-    if (jj_scan_token(LEFT_CURLEY)) return true;
-    if (jj_3R_43()) return true;
-    if (jj_scan_token(COLON)) return true;
-    if (jj_3R_43()) return true;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_76()) { jj_scanpos = xsp; break; }
-    }
-    xsp = jj_scanpos;
-    if (jj_scan_token(7)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(72)) return true;
-    }
-    return false;
-  }
-
-  private boolean jj_3R_40() {
-    if (jj_scan_token(IDENTIFIER)) return true;
-    return false;
-  }
-
-  private boolean jj_3_6() {
-    if (jj_3R_30()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_71() {
-    if (jj_scan_token(COMMA)) return true;
-    if (jj_3R_43()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_35() {
-    if (jj_3R_24()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_69() {
-    if (jj_scan_token(FALSE)) return true;
-    return false;
-  }
-
   private boolean jj_3R_68() {
     if (jj_scan_token(TRUE)) return true;
     return false;
@@ -3286,11 +3200,6 @@ public class VelocityParser/*@bgen(jjtree)*/implements VelocityParserTreeConstan
     return false;
   }
 
-  private boolean jj_3_1() {
-    if (jj_3R_24()) return true;
-    return false;
-  }
-
   private boolean jj_3R_50() {
     if (jj_3R_68()) return true;
     return false;
@@ -3388,6 +3297,127 @@ public class VelocityParser/*@bgen(jjtree)*/implements VelocityParserTreeConstan
     return false;
   }
 
+  private boolean jj_3_1() {
+    if (jj_3R_24()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_31() {
+    if (jj_3R_40()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_74() {
+    if (jj_3R_24()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_77() {
+    if (jj_3R_43()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_78()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_72() {
+    if (jj_3R_24()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_65() {
+    if (jj_scan_token(LBRACKET)) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_72()) {
+    jj_scanpos = xsp;
+    if (jj_3R_73()) return true;
+    }
+    if (jj_scan_token(DOUBLEDOT)) return true;
+    xsp = jj_scanpos;
+    if (jj_3R_74()) {
+    jj_scanpos = xsp;
+    if (jj_3R_75()) return true;
+    }
+    if (jj_scan_token(RBRACKET)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_29() {
+    if (jj_3R_40()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_67() {
+    if (jj_scan_token(LBRACKET)) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_77()) jj_scanpos = xsp;
+    if (jj_scan_token(RBRACKET)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_36() {
+    if (jj_3R_39()) return true;
+    return false;
+  }
+
+  private boolean jj_3_8() {
+    if (jj_3R_30()) return true;
+    return false;
+  }
+
+  private boolean jj_3_2() {
+    if (jj_scan_token(DOUBLE_ESCAPE)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_66() {
+    if (jj_scan_token(LEFT_CURLEY)) return true;
+    if (jj_3R_43()) return true;
+    if (jj_scan_token(COLON)) return true;
+    if (jj_3R_43()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_76()) { jj_scanpos = xsp; break; }
+    }
+    xsp = jj_scanpos;
+    if (jj_scan_token(7)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(74)) return true;
+    }
+    return false;
+  }
+
+  private boolean jj_3R_40() {
+    if (jj_scan_token(IDENTIFIER)) return true;
+    return false;
+  }
+
+  private boolean jj_3_6() {
+    if (jj_3R_30()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_71() {
+    if (jj_scan_token(COMMA)) return true;
+    if (jj_3R_43()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_35() {
+    if (jj_3R_24()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_69() {
+    if (jj_scan_token(FALSE)) return true;
+    return false;
+  }
+
   /** Generated Token Manager. */
   public VelocityParserTokenManager token_source;
   /** Current token. */
@@ -3408,13 +3438,13 @@ public class VelocityParser/*@bgen(jjtree)*/implements VelocityParserTreeConstan
       jj_la1_init_2();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x13783300,0x0,0x13783300,0x800000,0x3080000,0x10000000,0x60000042,0x0,0x7000004a,0x8,0x13783300,0x8,0x80,0x8,0x70000042,0x0,0x0,0x10000000,0x60000042,0x8,0x70000042,0x0,0x0,0x0,0x10600300,0x0,0x2,0x13783300,0x0,0x13783300,0x10000000,0x10000008,0x8,0x10000000,0x80000000,0x13783300,0x0,0x0,0x0,0x13783300,0x13783300,0x80000000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x70000142,0x10000000,0x60000142,};
+      jj_la1_0 = new int[] {0x4ef03300,0x0,0x4ef03300,0x1000000,0x6100000,0x40000000,0x80000042,0x0,0xc000004a,0x8,0x4ef03300,0x8,0x80,0x8,0xc0000042,0x0,0x0,0x40000000,0x80000042,0x8,0xc0000042,0x0,0x0,0x0,0x40c00300,0x0,0x2,0x4ef03300,0x0,0x4ef03300,0x40000000,0x40000008,0x8,0x40000000,0x0,0x4ef03300,0x0,0x0,0x0,0x4ef03300,0x4ef03300,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xc0000142,0x40000000,0x80000142,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x1b3c0000,0x13c0000,0x1a000000,0x0,0x0,0x8000000,0x10000000,0x2000000,0x18000000,0x0,0x1b3c0000,0x0,0x0,0x0,0x18000000,0x8000000,0x8000000,0x8000000,0x10000000,0x0,0x18000000,0x0,0x0,0x0,0x18000000,0x0,0x0,0x1b3c0000,0x0,0x1b3c0000,0x0,0x0,0x0,0x0,0x0,0x1b3c0000,0x400000,0x400000,0x800000,0x1b3c0000,0x1b3c0000,0x0,0x100,0x80,0x6000,0x6000,0x1e00,0x1e00,0x3,0x3,0x1c,0x1c,0x18000000,0x8000000,0x10000000,};
+      jj_la1_1 = new int[] {0x6cf00000,0x4f00000,0x68000000,0x0,0x0,0x20000000,0x40000001,0x8000000,0x60000001,0x0,0x6cf00000,0x0,0x0,0x0,0x60000001,0x20000000,0x20000000,0x20000000,0x40000001,0x0,0x60000001,0x0,0x0,0x0,0x60000000,0x0,0x0,0x6cf00000,0x0,0x6cf00000,0x0,0x0,0x0,0x0,0x2,0x6cf00000,0x1000000,0x1000000,0x2000000,0x6cf00000,0x6cf00000,0x2,0x400,0x200,0x18000,0x18000,0x7800,0x7800,0xc,0xc,0x70,0x70,0x60000001,0x20000000,0x40000001,};
    }
    private static void jj_la1_init_2() {
-      jj_la1_2 = new int[] {0x1e3,0x0,0x1c3,0x0,0x0,0xa1,0x0,0x3,0xa1,0x0,0x1e3,0x0,0x100,0x0,0xa0,0xa0,0xa0,0x0,0xa0,0x0,0xa0,0x20,0x20,0xa0,0x1c0,0xa0,0x0,0x1e3,0x20,0x1e3,0x20,0x20,0x0,0x20,0x0,0x1e3,0x0,0x0,0x0,0x1e3,0x1e3,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xa0,0xa0,0x0,};
+      jj_la1_2 = new int[] {0x78c,0x0,0x70c,0x0,0x0,0x284,0x0,0xc,0x284,0x0,0x78c,0x0,0x400,0x0,0x280,0x280,0x280,0x0,0x280,0x0,0x280,0x80,0x80,0x280,0x700,0x280,0x0,0x78c,0x80,0x78c,0x80,0x80,0x0,0x80,0x0,0x78c,0x0,0x0,0x0,0x78c,0x78c,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x280,0x280,0x0,};
    }
   final private JJCalls[] jj_2_rtns = new JJCalls[11];
   private boolean jj_rescan = false;
@@ -3570,7 +3600,7 @@ public class VelocityParser/*@bgen(jjtree)*/implements VelocityParserTreeConstan
   /** Generate ParseException. */
   public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[75];
+    boolean[] la1tokens = new boolean[77];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
@@ -3590,7 +3620,7 @@ public class VelocityParser/*@bgen(jjtree)*/implements VelocityParserTreeConstan
         }
       }
     }
-    for (int i = 0; i < 75; i++) {
+    for (int i = 0; i < 77; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;

@@ -41,117 +41,119 @@ public interface VelocityParserConstants {
   /** RegularExpression Id. */
   int DOLLARBANG = 15;
   /** RegularExpression Id. */
-  int HASH = 18;
+  int HASH = 19;
   /** RegularExpression Id. */
-  int SINGLE_LINE_COMMENT_START = 19;
+  int SINGLE_LINE_COMMENT_START = 20;
   /** RegularExpression Id. */
-  int DOUBLE_ESCAPE = 20;
+  int DOUBLE_ESCAPE = 21;
   /** RegularExpression Id. */
-  int ESCAPE = 21;
+  int ESCAPE = 22;
   /** RegularExpression Id. */
-  int TEXT = 22;
+  int TEXT = 23;
   /** RegularExpression Id. */
-  int SINGLE_LINE_COMMENT = 23;
+  int SINGLE_LINE_COMMENT = 24;
   /** RegularExpression Id. */
-  int FORMAL_COMMENT = 24;
+  int FORMAL_COMMENT = 25;
   /** RegularExpression Id. */
-  int MULTI_LINE_COMMENT = 25;
+  int MULTI_LINE_COMMENT = 26;
   /** RegularExpression Id. */
-  int WHITESPACE = 27;
+  int UNPARSED_CONTENT = 27;
   /** RegularExpression Id. */
-  int STRING_LITERAL = 28;
+  int WHITESPACE = 29;
   /** RegularExpression Id. */
-  int TRUE = 29;
+  int STRING_LITERAL = 30;
   /** RegularExpression Id. */
-  int FALSE = 30;
+  int TRUE = 31;
   /** RegularExpression Id. */
-  int NEWLINE = 31;
+  int FALSE = 32;
   /** RegularExpression Id. */
-  int MINUS = 32;
+  int NEWLINE = 33;
   /** RegularExpression Id. */
-  int PLUS = 33;
+  int MINUS = 34;
   /** RegularExpression Id. */
-  int MULTIPLY = 34;
+  int PLUS = 35;
   /** RegularExpression Id. */
-  int DIVIDE = 35;
+  int MULTIPLY = 36;
   /** RegularExpression Id. */
-  int MODULUS = 36;
+  int DIVIDE = 37;
   /** RegularExpression Id. */
-  int BINARY_AND = 37;
+  int MODULUS = 38;
   /** RegularExpression Id. */
-  int BINARY_OR = 38;
+  int BINARY_AND = 39;
   /** RegularExpression Id. */
-  int LOGICAL_AND = 39;
+  int BINARY_OR = 40;
   /** RegularExpression Id. */
-  int LOGICAL_OR = 40;
+  int LOGICAL_AND = 41;
   /** RegularExpression Id. */
-  int LOGICAL_LT = 41;
+  int LOGICAL_OR = 42;
   /** RegularExpression Id. */
-  int LOGICAL_LE = 42;
+  int LOGICAL_LT = 43;
   /** RegularExpression Id. */
-  int LOGICAL_GT = 43;
+  int LOGICAL_LE = 44;
   /** RegularExpression Id. */
-  int LOGICAL_GE = 44;
+  int LOGICAL_GT = 45;
   /** RegularExpression Id. */
-  int LOGICAL_EQUALS = 45;
+  int LOGICAL_GE = 46;
   /** RegularExpression Id. */
-  int LOGICAL_NOT_EQUALS = 46;
+  int LOGICAL_EQUALS = 47;
   /** RegularExpression Id. */
-  int LOGICAL_NOT = 47;
+  int LOGICAL_NOT_EQUALS = 48;
   /** RegularExpression Id. */
-  int EQUALS = 48;
+  int LOGICAL_NOT = 49;
   /** RegularExpression Id. */
-  int END = 49;
+  int EQUALS = 50;
   /** RegularExpression Id. */
-  int FOREACH_DIRECTIVE = 50;
+  int END = 51;
   /** RegularExpression Id. */
-  int MACRO_DIRECTIVE = 51;
+  int FOREACH_DIRECTIVE = 52;
   /** RegularExpression Id. */
-  int INCLUDE_DIRECTIVE = 52;
+  int MACRO_DIRECTIVE = 53;
   /** RegularExpression Id. */
-  int IF_DIRECTIVE = 53;
+  int INCLUDE_DIRECTIVE = 54;
   /** RegularExpression Id. */
-  int ELSEIF_DIRECTIVE = 54;
+  int IF_DIRECTIVE = 55;
   /** RegularExpression Id. */
-  int ELSE_DIRECTIVE = 55;
+  int ELSEIF_DIRECTIVE = 56;
   /** RegularExpression Id. */
-  int STOP_DIRECTIVE = 56;
+  int ELSE_DIRECTIVE = 57;
   /** RegularExpression Id. */
-  int MACROCALL_DIRECTIVE = 57;
+  int STOP_DIRECTIVE = 58;
   /** RegularExpression Id. */
-  int DIGIT = 58;
+  int MACROCALL_DIRECTIVE = 59;
   /** RegularExpression Id. */
-  int INTEGER_LITERAL = 59;
+  int DIGIT = 60;
   /** RegularExpression Id. */
-  int FLOATING_POINT_LITERAL = 60;
+  int INTEGER_LITERAL = 61;
   /** RegularExpression Id. */
-  int EXPONENT = 61;
+  int FLOATING_POINT_LITERAL = 62;
   /** RegularExpression Id. */
-  int LETTER = 62;
+  int EXPONENT = 63;
   /** RegularExpression Id. */
-  int DIRECTIVE_CHAR = 63;
+  int LETTER = 64;
   /** RegularExpression Id. */
-  int WORD = 64;
+  int DIRECTIVE_CHAR = 65;
   /** RegularExpression Id. */
-  int BRACKETED_WORD = 65;
+  int WORD = 66;
   /** RegularExpression Id. */
-  int ALPHA_CHAR = 66;
+  int BRACKETED_WORD = 67;
   /** RegularExpression Id. */
-  int ALPHANUM_CHAR = 67;
+  int ALPHA_CHAR = 68;
   /** RegularExpression Id. */
-  int IDENTIFIER_CHAR = 68;
+  int ALPHANUM_CHAR = 69;
   /** RegularExpression Id. */
-  int IDENTIFIER = 69;
+  int IDENTIFIER_CHAR = 70;
   /** RegularExpression Id. */
-  int DOT = 70;
+  int IDENTIFIER = 71;
   /** RegularExpression Id. */
-  int LCURLY = 71;
+  int DOT = 72;
   /** RegularExpression Id. */
-  int RCURLY = 72;
+  int LCURLY = 73;
   /** RegularExpression Id. */
-  int REFERENCE_TERMINATOR = 73;
+  int RCURLY = 74;
   /** RegularExpression Id. */
-  int DIRECTIVE_TERMINATOR = 74;
+  int REFERENCE_TERMINATOR = 75;
+  /** RegularExpression Id. */
+  int DIRECTIVE_TERMINATOR = 76;
 
   /** Lexical state. */
   int DIRECTIVE = 0;
@@ -166,11 +168,13 @@ public interface VelocityParserConstants {
   /** Lexical state. */
   int PRE_DIRECTIVE = 5;
   /** Lexical state. */
-  int IN_MULTI_LINE_COMMENT = 6;
+  int IN_UNPARSED_CONTENT = 6;
   /** Lexical state. */
-  int IN_FORMAL_COMMENT = 7;
+  int IN_MULTI_LINE_COMMENT = 7;
   /** Lexical state. */
-  int IN_SINGLE_LINE_COMMENT = 8;
+  int IN_FORMAL_COMMENT = 8;
+  /** Lexical state. */
+  int IN_SINGLE_LINE_COMMENT = 9;
 
   /** Literal token values. */
   String[] tokenImage = {
@@ -192,6 +196,7 @@ public interface VelocityParserConstants {
     "<DOLLARBANG>",
     "<token of kind 16>",
     "\"#*\"",
+    "\"#[[\"",
     "<HASH>",
     "\"##\"",
     "\"\\\\\\\\\"",
@@ -200,7 +205,8 @@ public interface VelocityParserConstants {
     "<SINGLE_LINE_COMMENT>",
     "\"*#\"",
     "\"*#\"",
-    "<token of kind 26>",
+    "\"]]#\"",
+    "<token of kind 28>",
     "<WHITESPACE>",
     "<STRING_LITERAL>",
     "\"true\"",

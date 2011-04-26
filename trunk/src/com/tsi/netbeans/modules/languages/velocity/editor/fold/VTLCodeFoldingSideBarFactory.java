@@ -31,7 +31,7 @@ public class VTLCodeFoldingSideBarFactory implements SideBarFactory
    /**
     * {@inheritDoc}
     */
-   public JComponent createSideBar(final JTextComponent jtc)
+   @Override public JComponent createSideBar(final JTextComponent jtc)
    {
       return(new CodeFoldingSideBar(jtc));
    }

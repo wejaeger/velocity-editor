@@ -65,6 +65,7 @@ public class VTLLanguageHierarchy extends LanguageHierarchy<VTLTokenId>
          new VTLTokenId ("SINGLE_LINE_COMMENT", "comment", SINGLE_LINE_COMMENT),
          new VTLTokenId ("FORMAL_COMMENT", "comment", FORMAL_COMMENT),
          new VTLTokenId ("MULTI_LINE_COMMENT", "comment", MULTI_LINE_COMMENT),
+         new VTLTokenId ("UNPARSED_CONTENT", "unparsedcontent", UNPARSED_CONTENT),
          new VTLTokenId ("STRING_LITERAL", "string", STRING_LITERAL),
          new VTLTokenId ("TRUE", "boolean", TRUE),
          new VTLTokenId ("FALSE", "boolean", FALSE),

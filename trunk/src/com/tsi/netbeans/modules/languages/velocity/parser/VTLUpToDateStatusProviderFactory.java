@@ -36,7 +36,7 @@ public class VTLUpToDateStatusProviderFactory implements UpToDateStatusProviderF
     * @return a reference to a provider either retrieved from a cache or newly
     *         created. Never {@code null}.
     */
-   public UpToDateStatusProvider createUpToDateStatusProvider(final Document document)
+   @Override public UpToDateStatusProvider createUpToDateStatusProvider(final Document document)
    {
       return(VTLUpToDateStatusProvider.forDocument(document));
    }

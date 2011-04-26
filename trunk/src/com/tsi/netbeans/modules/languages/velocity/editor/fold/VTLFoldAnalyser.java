@@ -135,7 +135,7 @@ class VTLFoldAnalyser extends VelocityAnalyser
    /**
     * {@inheritDoc}
     */
-   public void openTransaction()
+   @Override public void openTransaction()
    {
       if (m_Transaction == null)
          m_Transaction = m_Operation.openTransaction();
@@ -147,7 +147,7 @@ class VTLFoldAnalyser extends VelocityAnalyser
    /**
     * {@inheritDoc}
     */
-   public void commitTransaction()
+   @Override public void commitTransaction()
    {
       final Set<VTLFoldInfo> untouched = new HashSet<VTLFoldInfo>();
 
