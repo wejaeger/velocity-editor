@@ -48,7 +48,7 @@ public class VTLTokenId implements TokenId
     * @return a reference to the language of this token type.
     *         Never {@code null}.
     */
-   public static final Language<VTLTokenId> getLanguage()
+   public static Language<VTLTokenId> getLanguage()
    {
       return(LANGUAGE);
    }

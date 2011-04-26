@@ -10,45 +10,46 @@ public interface VelocityParserTreeConstants
   public int JJTESCAPEDDIRECTIVE = 2;
   public int JJTESCAPE = 3;
   public int JJTCOMMENT = 4;
-  public int JJTFLOATINGPOINTLITERAL = 5;
-  public int JJTINTEGERLITERAL = 6;
-  public int JJTSTRINGLITERAL = 7;
-  public int JJTIDENTIFIER = 8;
-  public int JJTWORD = 9;
-  public int JJTDIRECTIVE = 10;
-  public int JJTBLOCK = 11;
-  public int JJTMAP = 12;
-  public int JJTOBJECTARRAY = 13;
-  public int JJTINTEGERRANGE = 14;
-  public int JJTMETHOD = 15;
-  public int JJTREFERENCE = 16;
-  public int JJTTRUE = 17;
-  public int JJTFALSE = 18;
-  public int JJTTEXT = 19;
-  public int JJTFOREACHSTATEMENT = 20;
-  public int JJTMACROSTATEMENT = 21;
-  public int JJTINCLUDESTATEMENT = 22;
-  public int JJTIFSTATEMENT = 23;
-  public int JJTELSESTATEMENT = 24;
-  public int JJTELSEIFSTATEMENT = 25;
-  public int JJTSETDIRECTIVE = 26;
-  public int JJTSTOP = 27;
-  public int JJTEXPRESSION = 28;
-  public int JJTASSIGNMENT = 29;
-  public int JJTORNODE = 30;
-  public int JJTANDNODE = 31;
-  public int JJTEQNODE = 32;
-  public int JJTNENODE = 33;
-  public int JJTLTNODE = 34;
-  public int JJTGTNODE = 35;
-  public int JJTLENODE = 36;
-  public int JJTGENODE = 37;
-  public int JJTADDNODE = 38;
-  public int JJTSUBTRACTNODE = 39;
-  public int JJTMULNODE = 40;
-  public int JJTDIVNODE = 41;
-  public int JJTMODNODE = 42;
-  public int JJTNOTNODE = 43;
+  public int JJTUNPARSEDCONTENT = 5;
+  public int JJTFLOATINGPOINTLITERAL = 6;
+  public int JJTINTEGERLITERAL = 7;
+  public int JJTSTRINGLITERAL = 8;
+  public int JJTIDENTIFIER = 9;
+  public int JJTWORD = 10;
+  public int JJTDIRECTIVE = 11;
+  public int JJTBLOCK = 12;
+  public int JJTMAP = 13;
+  public int JJTOBJECTARRAY = 14;
+  public int JJTINTEGERRANGE = 15;
+  public int JJTMETHOD = 16;
+  public int JJTREFERENCE = 17;
+  public int JJTTRUE = 18;
+  public int JJTFALSE = 19;
+  public int JJTTEXT = 20;
+  public int JJTFOREACHSTATEMENT = 21;
+  public int JJTMACROSTATEMENT = 22;
+  public int JJTINCLUDESTATEMENT = 23;
+  public int JJTIFSTATEMENT = 24;
+  public int JJTELSESTATEMENT = 25;
+  public int JJTELSEIFSTATEMENT = 26;
+  public int JJTSETDIRECTIVE = 27;
+  public int JJTSTOP = 28;
+  public int JJTEXPRESSION = 29;
+  public int JJTASSIGNMENT = 30;
+  public int JJTORNODE = 31;
+  public int JJTANDNODE = 32;
+  public int JJTEQNODE = 33;
+  public int JJTNENODE = 34;
+  public int JJTLTNODE = 35;
+  public int JJTGTNODE = 36;
+  public int JJTLENODE = 37;
+  public int JJTGENODE = 38;
+  public int JJTADDNODE = 39;
+  public int JJTSUBTRACTNODE = 40;
+  public int JJTMULNODE = 41;
+  public int JJTDIVNODE = 42;
+  public int JJTMODNODE = 43;
+  public int JJTNOTNODE = 44;
 
 
   public String[] jjtNodeName = {
@@ -57,6 +58,7 @@ public interface VelocityParserTreeConstants
     "EscapedDirective",
     "Escape",
     "Comment",
+    "UnparsedContent",
     "FloatingPointLiteral",
     "IntegerLiteral",
     "StringLiteral",
@@ -98,4 +100,4 @@ public interface VelocityParserTreeConstants
     "NotNode",
   };
 }
-/* JavaCC - OriginalChecksum=5694557666472b152dfaedae87af9239 (do not edit this line) */
+/* JavaCC - OriginalChecksum=ec33be0c33a2591df3b08da5a52dc4cb (do not edit this line) */

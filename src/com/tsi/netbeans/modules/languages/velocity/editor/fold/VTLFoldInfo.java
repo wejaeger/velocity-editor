@@ -105,7 +105,7 @@ final class VTLFoldInfo implements Comparable
    /**
     * {@inheritDoc}
     */
-   public int compareTo(final Object object)
+   @Override public int compareTo(final Object object)
    {
       final VTLFoldInfo localFoldInfo = (VTLFoldInfo)object;
       final int         iRet;

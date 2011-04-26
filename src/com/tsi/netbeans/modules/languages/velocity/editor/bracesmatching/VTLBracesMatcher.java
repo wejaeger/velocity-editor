@@ -54,7 +54,7 @@ public class VTLBracesMatcher implements BracesMatcher, BracesMatcherFactory
    /**
     * {@inheritDoc}
     */
-   public int[] findOrigin() throws InterruptedException, BadLocationException
+   @Override public int[] findOrigin() throws InterruptedException, BadLocationException
    {
       final TokenHierarchy                         localTokenHierarchy = TokenHierarchy.get(m_Context.getDocument());
       final List<TokenSequence<? extends TokenId>> localList           = getTokenSequences(localTokenHierarchy, m_Context.getSearchOffset(), VTLTokenId.getLanguage());
@@ -96,7 +96,7 @@ public class VTLBracesMatcher implements BracesMatcher, BracesMatcherFactory
    /**
     * {@inheritDoc}
     */
-   public int[] findMatches() throws InterruptedException, BadLocationException
+   @Override public int[] findMatches() throws InterruptedException, BadLocationException
    {
       final TokenHierarchy                         localTokenHierarchy = TokenHierarchy.get(m_Context.getDocument());
       final List<TokenSequence<? extends TokenId>> localList           = getTokenSequences(localTokenHierarchy, m_iOriginOffset, VTLTokenId.getLanguage());
@@ -174,7 +174,7 @@ public class VTLBracesMatcher implements BracesMatcher, BracesMatcherFactory
     *
     * @return a reference to a newly created {@link VTLBracesMatcher} object.
     */
-   public BracesMatcher createMatcher(final MatcherContext mc)
+   @Override public BracesMatcher createMatcher(final MatcherContext mc)
    {
       return(new VTLBracesMatcher(mc));
    }

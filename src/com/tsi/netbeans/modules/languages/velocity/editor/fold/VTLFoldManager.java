@@ -49,7 +49,7 @@ public class VTLFoldManager implements FoldManager, FoldHierarchyListener
    /**
     * {@inheritDoc}
     */
-   public void init(final FoldOperation operation)
+   @Override public void init(final FoldOperation operation)
    {
       m_Operation = operation;
       m_Operation.getHierarchy().addFoldHierarchyListener(this);
@@ -58,7 +58,7 @@ public class VTLFoldManager implements FoldManager, FoldHierarchyListener
    /**
     * {@inheritDoc}
     */
-   public void initFolds(final FoldHierarchyTransaction transaction)
+   @Override public void initFolds(final FoldHierarchyTransaction transaction)
    {
 
       final DataObject localDataObject = (DataObject)m_Operation.getHierarchy().getComponent().getDocument().getProperty("stream");
@@ -76,49 +76,49 @@ public class VTLFoldManager implements FoldManager, FoldHierarchyListener
    /**
     * {@inheritDoc}
     */
-   public void insertUpdate(final DocumentEvent evt, final FoldHierarchyTransaction transaction)
+   @Override public void insertUpdate(final DocumentEvent evt, final FoldHierarchyTransaction transaction)
    {
    }
 
    /**
     * {@inheritDoc}
     */
-   public void removeUpdate(final DocumentEvent evt, final FoldHierarchyTransaction transaction)
+   @Override public void removeUpdate(final DocumentEvent evt, final FoldHierarchyTransaction transaction)
    {
    }
 
    /**
     * {@inheritDoc}
     */
-   public void changedUpdate(final DocumentEvent evt, final FoldHierarchyTransaction transaction)
+   @Override public void changedUpdate(final DocumentEvent evt, final FoldHierarchyTransaction transaction)
    {
    }
 
    /**
     * {@inheritDoc}
     */
-   public void removeEmptyNotify(final Fold epmtyFold)
+   @Override public void removeEmptyNotify(final Fold epmtyFold)
    {
    }
 
    /**
     * {@inheritDoc}
     */
-   public void removeDamagedNotify(final Fold damagedFold)
+   @Override public void removeDamagedNotify(final Fold damagedFold)
    {
    }
 
    /**
     * {@inheritDoc}
     */
-   public void expandNotify(final Fold expandedFold)
+   @Override public void expandNotify(final Fold expandedFold)
    {
    }
 
    /**
     * {@inheritDoc}
     */
-   public void release()
+   @Override public void release()
    {
       VTLParser.deregisterAnalyser(m_File, m_Analyser);
       m_CurrentFolds = null;
@@ -129,7 +129,7 @@ public class VTLFoldManager implements FoldManager, FoldHierarchyListener
    /**
     * {@inheritDoc}
     */
-   public void foldHierarchyChanged(final FoldHierarchyEvent evt)
+   @Override public void foldHierarchyChanged(final FoldHierarchyEvent evt)
    {
       final int            iChangeCount = evt.getFoldStateChangeCount();
       final StyledDocument document     = (StyledDocument)m_Operation.getHierarchy().getComponent().getDocument();

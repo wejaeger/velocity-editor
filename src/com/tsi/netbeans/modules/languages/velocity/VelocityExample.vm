@@ -26,4 +26,5 @@ attributeType ( $oid NAME '$attribute.name'
 #set ($imperial = ["Munetaka","Koreyasu","Hisakira","Morikune"])
 #set($foo = {$foo : $bar, $blargh : $thingy})
 
+Example text with #[[unparsed content ]]# inside
 
