@@ -1,0 +1,1 @@
+VTL (Velocity Template Language) edit support for the NetBeans IDE.
