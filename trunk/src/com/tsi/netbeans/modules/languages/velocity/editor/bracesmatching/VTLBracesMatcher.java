@@ -13,6 +13,7 @@ import com.tsi.netbeans.modules.languages.velocity.jcclexer.VelocityParserConsta
 import com.tsi.netbeans.modules.languages.velocity.lexer.VTLTokenId;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.text.AbstractDocument;
 import javax.swing.text.BadLocationException;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.Token;
@@ -56,39 +57,50 @@ public class VTLBracesMatcher implements BracesMatcher, BracesMatcherFactory
     */
    @Override public int[] findOrigin() throws InterruptedException, BadLocationException
    {
-      final TokenHierarchy                         localTokenHierarchy = TokenHierarchy.get(m_Context.getDocument());
-      final List<TokenSequence<? extends TokenId>> localList           = getTokenSequences(localTokenHierarchy, m_Context.getSearchOffset(), VTLTokenId.getLanguage());
-
       final int[] aiOrigins;
-      if (!localList.isEmpty())
+      final AbstractDocument doc = (AbstractDocument)m_Context.getDocument();
+
+      doc.readLock();
+
+      try
       {
-         final TokenSequence<? extends TokenId> ts    = localList.get(localList.size() - 1);
-         final Token<? extends TokenId>         token = ts.offsetToken();
+         final TokenHierarchy<?>                      localTokenHierarchy = TokenHierarchy.get(m_Context.getDocument());
+         final List<TokenSequence<? extends TokenId>> localList           = getTokenSequences(localTokenHierarchy, m_Context.getSearchOffset(), VTLTokenId.getLanguage());
 
-         switch (token.id().ordinal())
+         if (!localList.isEmpty())
          {
-            case VelocityParserConstants.ELSEIF_DIRECTIVE:
-            case VelocityParserConstants.ELSE_DIRECTIVE:
-            case VelocityParserConstants.FOREACH_DIRECTIVE:
-            case VelocityParserConstants.IF_DIRECTIVE:
-            case VelocityParserConstants.MACRO_DIRECTIVE:
-               aiOrigins       = new int[] {ts.offset(), ts.offset() + token.length()};
-               m_iOriginOffset = aiOrigins[0];
-               m_fBackward     = false;
-               break;
+            final TokenSequence<? extends TokenId> ts    = localList.get(localList.size() - 1);
+            final Token<? extends TokenId>         token = ts.offsetToken();
 
-            case VelocityParserConstants.END:
-               aiOrigins       = new int[] {ts.offset(), ts.offset() + token.text().toString().trim().length()};
-               m_iOriginOffset = aiOrigins[0];
-               m_fBackward     = true;
-               break;
+            switch (token.id().ordinal())
+            {
+               case VelocityParserConstants.ELSEIF_DIRECTIVE:
+               case VelocityParserConstants.ELSE_DIRECTIVE:
+               case VelocityParserConstants.FOREACH_DIRECTIVE:
+               case VelocityParserConstants.IF_DIRECTIVE:
+               case VelocityParserConstants.MACRO_DIRECTIVE:
+                  aiOrigins       = new int[] {ts.offset(), ts.offset() + token.length()};
+                  m_iOriginOffset = aiOrigins[0];
+                  m_fBackward     = false;
+                  break;
 
-            default:
-               aiOrigins = null;
+               case VelocityParserConstants.END:
+                  aiOrigins       = new int[] {ts.offset(), ts.offset() + token.text().toString().trim().length()};
+                  m_iOriginOffset = aiOrigins[0];
+                  m_fBackward     = true;
+                  break;
+
+               default:
+                  aiOrigins = null;
+            }
          }
+         else
+            aiOrigins = null;
       }
-      else
-         aiOrigins = null;
+      finally
+      {
+         doc.readUnlock();
+      }
 
       return(aiOrigins);
    }
@@ -98,68 +110,78 @@ public class VTLBracesMatcher implements BracesMatcher, BracesMatcherFactory
     */
    @Override public int[] findMatches() throws InterruptedException, BadLocationException
    {
-      final TokenHierarchy                         localTokenHierarchy = TokenHierarchy.get(m_Context.getDocument());
-      final List<TokenSequence<? extends TokenId>> localList           = getTokenSequences(localTokenHierarchy, m_iOriginOffset, VTLTokenId.getLanguage());
-
+      final AbstractDocument doc = (AbstractDocument)m_Context.getDocument();
       int[] aiMatches = null;
 
-      if (!localList.isEmpty())
+      doc.readLock();
+
+      try
       {
-         final TokenSequence<? extends TokenId> ts = localList.get(localList.size() - 1);
+         final TokenHierarchy<?>                      localTokenHierarchy = TokenHierarchy.get(m_Context.getDocument());
+         final List<TokenSequence<? extends TokenId>> localList           = getTokenSequences(localTokenHierarchy, m_iOriginOffset, VTLTokenId.getLanguage());
 
-         ts.move(m_iOriginOffset);
-
-         final boolean fHasNext;
-         if (m_fBackward)
-            fHasNext = true;
-         else
-            fHasNext = ts.moveNext();
-
-         if (fHasNext)
+         if (!localList.isEmpty())
          {
-            int iLevel = 0;
-            while ((iLevel >= 0) && (m_fBackward ? ts.movePrevious() : ts.moveNext()))
+            final TokenSequence<? extends TokenId> ts = localList.get(localList.size() - 1);
+
+            ts.move(m_iOriginOffset);
+
+            final boolean fHasNext;
+            if (m_fBackward)
+               fHasNext = true;
+            else
+               fHasNext = ts.moveNext();
+
+            if (fHasNext)
             {
-               final Token<? extends TokenId> token = ts.offsetToken();
-
-               switch (token.id().ordinal())
+               int iLevel = 0;
+               while ((iLevel >= 0) && (m_fBackward ? ts.movePrevious() : ts.moveNext()))
                {
-                  case VelocityParserConstants.ELSEIF_DIRECTIVE:
-                  case VelocityParserConstants.ELSE_DIRECTIVE:
-                     break;
+                  final Token<? extends TokenId> token = ts.offsetToken();
 
-                  case VelocityParserConstants.FOREACH_DIRECTIVE:
-                  case VelocityParserConstants.IF_DIRECTIVE:
-                  case VelocityParserConstants.MACRO_DIRECTIVE:
-                     if (m_fBackward)
-                     {
-                        if (iLevel == 0)
-                           aiMatches = new int[] {ts.offset(), ts.offset() + token.length()};
+                  switch (token.id().ordinal())
+                  {
+                     case VelocityParserConstants.ELSEIF_DIRECTIVE:
+                     case VelocityParserConstants.ELSE_DIRECTIVE:
+                        break;
 
-                        iLevel--;
-                     }
-                     else
-                        iLevel++;
+                     case VelocityParserConstants.FOREACH_DIRECTIVE:
+                     case VelocityParserConstants.IF_DIRECTIVE:
+                     case VelocityParserConstants.MACRO_DIRECTIVE:
+                        if (m_fBackward)
+                        {
+                           if (iLevel == 0)
+                              aiMatches = new int[] {ts.offset(), ts.offset() + token.length()};
 
-                     break;
+                           iLevel--;
+                        }
+                        else
+                           iLevel++;
 
-                  case VelocityParserConstants.END:
-                     if (!m_fBackward)
-                     {
-                        if (iLevel == 0)
-                           aiMatches = new int[] {ts.offset(), ts.offset() + token.length()};
+                        break;
 
-                        iLevel--;
-                     }
-                     else
-                        iLevel++;
+                     case VelocityParserConstants.END:
+                        if (!m_fBackward)
+                        {
+                           if (iLevel == 0)
+                              aiMatches = new int[] {ts.offset(), ts.offset() + token.length()};
 
-                     break;
+                           iLevel--;
+                        }
+                        else
+                           iLevel++;
 
-                  default:
+                        break;
+
+                     default:
+                  }
                }
             }
          }
+      }
+      finally
+      {
+         doc.readUnlock();
       }
 
       return(aiMatches);
